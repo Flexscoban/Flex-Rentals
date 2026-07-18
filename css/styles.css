@@ -288,31 +288,26 @@ h1, h2, h3, h4 {
   font-family: var(--font-heading);
   font-style: italic;
   font-weight: 800;
-  font-size: 84px;
-  letter-spacing: -2px;
+  font-size: 248px;
+  letter-spacing: -4px;
   fill: var(--color-accent);
 }
 .logo__rentals-text {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 28px;
-  letter-spacing: 9px;
+  font-size: 88px;
+  letter-spacing: 13px;
   fill: var(--color-white);
 }
 .logo__swoosh {
-  fill: none;
-  stroke: var(--color-accent);
-  stroke-width: 7;
-  stroke-linecap: round;
+  fill: var(--color-accent);
 }
 .logo__road {
   fill: var(--color-white);
   opacity: 0.92;
 }
 .logo__dashes {
-  stroke: var(--color-dark-900);
-  stroke-width: 4;
-  stroke-linecap: round;
+  fill: var(--color-dark-900);
   opacity: 0.6;
 }
 
