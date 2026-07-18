@@ -249,33 +249,71 @@ h1, h2, h3, h4 {
 }
 
 .logo {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  align-items: center;
   line-height: 1;
   position: relative;
+  flex-shrink: 0;
 }
-.logo__mark {
+
+/* Persistent dark backing so the logo stays legible against any hero
+   imagery while the header is transparent. Fades out once the header
+   itself goes solid on scroll, since it becomes redundant. */
+.logo__badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(15, 17, 20, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.4rem 0.75rem;
+  transition: background-color var(--transition-base), border-color var(--transition-base),
+    padding var(--transition-base);
+}
+.site-header.is-scrolled .logo__badge {
+  background: transparent;
+  border-color: transparent;
+  padding: 0.4rem 0;
+}
+
+.logo__svg {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+.logo--footer .logo__svg { height: 60px; }
+
+.logo__flex-text {
   font-family: var(--font-heading);
+  font-style: italic;
   font-weight: 800;
-  font-size: 1.5rem;
-  color: var(--color-white);
-  letter-spacing: 0.02em;
+  font-size: 84px;
+  letter-spacing: -2px;
+  fill: var(--color-accent);
 }
-.logo__sub {
+.logo__rentals-text {
   font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 1.05rem;
-  color: var(--color-accent);
-  letter-spacing: 0.16em;
-  margin-top: 1px;
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 9px;
+  fill: var(--color-white);
 }
-.logo__tag {
-  display: none;
-  font-size: 0.55rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--color-muted);
-  margin-top: 3px;
+.logo__swoosh {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+.logo__road {
+  fill: var(--color-white);
+  opacity: 0.92;
+}
+.logo__dashes {
+  stroke: var(--color-dark-900);
+  stroke-width: 4;
+  stroke-linecap: round;
+  opacity: 0.6;
 }
 
 .main-nav {
@@ -355,7 +393,6 @@ h1, h2, h3, h4 {
 }
 
 @media (min-width: 900px) {
-  .logo__tag { display: block; }
   .main-nav__list { display: flex; }
   .main-nav__cta { display: inline-flex; }
   .nav-toggle { display: none; }

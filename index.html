@@ -16,7 +16,7 @@
   <!-- Fonts: Poppins (headings) + Inter (body/UI) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,700;0,800;1,800&display=swap" rel="stylesheet" />
 
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
   <link rel="stylesheet" href="css/styles.css" />
@@ -133,9 +133,18 @@
   <header class="site-header" id="siteHeader">
     <div class="container site-header__inner">
       <a href="#home" class="logo" aria-label="Flex Rentals — Home">
-        <span class="logo__mark">FLEX</span>
-        <span class="logo__sub">RENTALS</span>
-        <span class="logo__tag">RENT. DRIVE. EARN.</span>
+        <span class="logo__badge">
+          <svg class="logo__svg" viewBox="0 0 340 232" role="img" aria-labelledby="logoTitleHeader">
+            <title id="logoTitleHeader">Flex Rentals</title>
+            <text x="0" y="90" class="logo__flex-text">FLEX</text>
+            <text x="2" y="130" class="logo__rentals-text">RENTALS</text>
+            <g transform="translate(0,150)">
+              <path class="logo__swoosh" d="M0 44 C 60 8, 150 -8, 226 2 C 276 8, 312 20, 338 8"/>
+              <path class="logo__road" d="M6 58 L74 28 C 132 10, 220 10, 284 28 L338 46 L338 62 L6 62 Z"/>
+              <path class="logo__dashes" d="M64 46 L94 46 M134 42 L164 42 M202 42 L232 42 M268 44 L296 44"/>
+            </g>
+          </svg>
+        </span>
       </a>
 
       <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -553,8 +562,16 @@
     <div class="container site-footer__inner">
       <div class="site-footer__brand">
         <a href="#home" class="logo logo--footer" aria-label="Flex Rentals — Home">
-          <span class="logo__mark">FLEX</span>
-          <span class="logo__sub">RENTALS</span>
+          <svg class="logo__svg" viewBox="0 0 340 232" role="img" aria-labelledby="logoTitleFooter">
+            <title id="logoTitleFooter">Flex Rentals</title>
+            <text x="0" y="90" class="logo__flex-text">FLEX</text>
+            <text x="2" y="130" class="logo__rentals-text">RENTALS</text>
+            <g transform="translate(0,150)">
+              <path class="logo__swoosh" d="M0 44 C 60 8, 150 -8, 226 2 C 276 8, 312 20, 338 8"/>
+              <path class="logo__road" d="M6 58 L74 28 C 132 10, 220 10, 284 28 L338 46 L338 62 L6 62 Z"/>
+              <path class="logo__dashes" d="M64 46 L94 46 M134 42 L164 42 M202 42 L232 42 M268 44 L296 44"/>
+            </g>
+          </svg>
         </a>
         <p class="site-footer__tagline">Rent. Drive. Earn.</p>
         <p class="site-footer__location">
