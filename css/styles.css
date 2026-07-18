@@ -277,39 +277,12 @@ h1, h2, h3, h4 {
   padding: 0.4rem 0;
 }
 
-.logo__svg {
+.logo__img {
   height: 42px;
   width: auto;
   display: block;
 }
-.logo--footer .logo__svg { height: 60px; }
-
-.logo__flex-text {
-  font-family: var(--font-heading);
-  font-style: italic;
-  font-weight: 800;
-  font-size: 248px;
-  letter-spacing: -4px;
-  fill: var(--color-accent);
-}
-.logo__rentals-text {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 88px;
-  letter-spacing: 13px;
-  fill: var(--color-white);
-}
-.logo__swoosh {
-  fill: var(--color-accent);
-}
-.logo__road {
-  fill: var(--color-white);
-  opacity: 0.92;
-}
-.logo__dashes {
-  fill: var(--color-dark-900);
-  opacity: 0.6;
-}
+.logo--footer .logo__img { height: 60px; }
 
 .main-nav {
   display: flex;
@@ -409,39 +382,29 @@ h1, h2, h3, h4 {
   inset: 0;
   z-index: 0;
 }
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  background-image: url('../assets/images/hero.jpg');
+  background-size: cover;
+  background-position: center 38%;
+  filter: brightness(0.6) saturate(0.85);
+}
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(110deg, rgba(10, 12, 14, 0.96) 0%, rgba(10, 12, 14, 0.88) 26%, rgba(10, 12, 14, 0.58) 56%, rgba(10, 12, 14, 0.3) 100%),
+    linear-gradient(to bottom, rgba(10, 12, 14, 0.55) 0%, rgba(10, 12, 14, 0) 22%, rgba(10, 12, 14, 0) 68%, rgba(10, 12, 14, 0.85) 100%);
+}
 .hero__glow {
   position: absolute;
   top: -20%;
   right: -10%;
   width: 70%;
   height: 70%;
-  background: radial-gradient(circle, rgba(30, 111, 61, 0.45) 0%, rgba(30, 111, 61, 0) 65%);
+  background: radial-gradient(circle, rgba(30, 111, 61, 0.35) 0%, rgba(30, 111, 61, 0) 65%);
   filter: blur(10px);
-}
-.hero__grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
-}
-.hero__skyline {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 34%;
-  opacity: 0.9;
-}
-.hero__car {
-  position: absolute;
-  right: -4%;
-  bottom: 6%;
-  width: min(46vw, 480px);
-  color: var(--color-accent);
-  opacity: 0.14;
 }
 
 .hero__inner {
