@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flex Rentals | Rent. Drive. Earn. — Weekly Rideshare &amp; Delivery Vehicle Rentals in Atlanta, GA</title>
+  <meta name="description" content="Reliable weekly rental vehicles for Uber, Lyft, DoorDash, Instacart, Amazon Flex and personal use. Insurance included, no credit check, unlimited miles. Starting at $350/week. Apply today." />
+  <meta name="theme-color" content="#1F2328" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Flex Rentals" />
+  <meta property="og:title" content="Flex Rentals | Rent. Drive. Earn." />
+  <meta property="og:description" content="Reliable weekly rental vehicles for Uber, Lyft, DoorDash, Instacart, Amazon Flex and personal use. Apply today to reserve the next available vehicle." />
+
+  <!-- Fonts: Poppins (headings) + Inter (body/UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script>document.documentElement.classList.replace('no-js', 'js');</script>
+
+  <!-- LocalBusiness structured data for local SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutomotiveBusiness",
+    "name": "Flex Rentals LLC",
+    "description": "Weekly rideshare and delivery vehicle rentals for Uber, Lyft, DoorDash, Instacart, and Amazon Flex drivers.",
+    "areaServed": "Atlanta, GA",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Atlanta",
+      "addressRegion": "GA",
+      "addressCountry": "US"
+    },
+    "priceRange": "$350/week"
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ==================== SVG ICON SPRITE ==================== -->
+  <svg class="icon-sprite" aria-hidden="true" style="display:none;">
+    <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2.5l7.5 3.2v5.4c0 5-3.2 8.9-7.5 10.4-4.3-1.5-7.5-5.4-7.5-10.4V5.7L12 2.5z"/>
+      <path d="M8.8 12.2l2.2 2.2 4.2-4.6"/>
+    </symbol>
+    <symbol id="icon-no-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.5" y="5.5" width="19" height="13" rx="2"/>
+      <path d="M2.5 9.8h19"/>
+      <path d="M6 15h4"/>
+    </symbol>
+    <symbol id="icon-infinity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 9a3.5 3.5 0 0 0 0 7c2.5 0 3.8-2.2 5-4s2.5-4 5-4a3.5 3.5 0 0 1 0 7c-2.5 0-3.8-2.2-5-4S9.5 9 7 9z"/>
+    </symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="3.5"/>
+      <path d="M4.5 20.5c1.4-3.6 4.3-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/>
+    </symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="16" rx="2"/>
+      <path d="M3 9.5h18M8 3v4M16 3v4"/>
+    </symbol>
+    <symbol id="icon-cash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.5" y="6.5" width="19" height="11" rx="2"/>
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M5.5 9v6M18.5 9v6"/>
+    </symbol>
+    <symbol id="icon-headset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 13v-1a8 8 0 0 1 16 0v1"/>
+      <rect x="2.5" y="13" width="4" height="6" rx="1.5"/>
+      <rect x="17.5" y="13" width="4" height="6" rx="1.5"/>
+      <path d="M20 19v.5a3.5 3.5 0 0 1-3.5 3.5H13"/>
+    </symbol>
+    <symbol id="icon-document" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 2.5h7l4 4V21a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z"/>
+      <path d="M14 2.5V7h4M9 12.5h6M9 16h6"/>
+    </symbol>
+    <symbol id="icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 17.5H6a4 4 0 0 1-.6-7.95 5.5 5.5 0 0 1 10.7-2A4.5 4.5 0 0 1 17.5 17.5h-1.5"/>
+      <path d="M12 21v-8M9 15.5 12 12.5 15 15.5"/>
+    </symbol>
+    <symbol id="icon-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3.5 14.5l1.6-5A2 2 0 0 1 7 8h10a2 2 0 0 1 1.9 1.5l1.6 5"/>
+      <path d="M3 14.5h18v3.5a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1V17H6.5v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3.5z"/>
+      <circle cx="7" cy="17" r="1.6"/>
+      <circle cx="17" cy="17" r="1.6"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12.5l5.5 5.5L20 7"/>
+    </symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 9l6 6 6-6"/>
+    </symbol>
+    <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12h16M13 5l7 7-7 7"/>
+    </symbol>
+    <symbol id="icon-id-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.5" y="5" width="19" height="14" rx="2"/>
+      <circle cx="8" cy="12" r="2.2"/>
+      <path d="M5.5 16.2c.6-1.5 1.5-2.2 2.5-2.2s1.9.7 2.5 2.2M14 9.5h4M14 12.5h4M14 15.5h2.5"/>
+    </symbol>
+    <symbol id="icon-location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 21.5S5 15 5 9.8a7 7 0 0 1 14 0C19 15 12 21.5 12 21.5z"/>
+      <circle cx="12" cy="9.8" r="2.5"/>
+    </symbol>
+    <symbol id="icon-facebook" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 8.5h2V5h-2.5A3.5 3.5 0 0 0 11 8.5V11H9v3.5h2V21h3.5v-6.5h2.4l.6-3.5h-3V9c0-.5.3-.5.5-.5z"/>
+    </symbol>
+    <symbol id="icon-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17" cy="7" r="0.8" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="icon-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3.5 5.5h17v11h-9L6.5 20v-3.5h-3v-11z"/>
+    </symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17"/>
+    </symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 5l14 14M19 5 5 19"/>
+    </symbol>
+  </svg>
+
+  <!-- Skip link for accessibility -->
+  <a class="skip-link" href="#apply">Skip to application form</a>
+
+  <!-- ==================== HEADER / NAVIGATION ==================== -->
+  <header class="site-header" id="siteHeader">
+    <div class="container site-header__inner">
+      <a href="#home" class="logo" aria-label="Flex Rentals — Home">
+        <span class="logo__mark">FLEX</span>
+        <span class="logo__sub">RENTALS</span>
+        <span class="logo__tag">RENT. DRIVE. EARN.</span>
+      </a>
+
+      <nav class="main-nav" id="mainNav" aria-label="Primary">
+        <ul class="main-nav__list">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#requirements">Requirements</a></li>
+        </ul>
+        <a href="#apply" class="btn btn--primary btn--sm main-nav__cta">Apply Now</a>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">
+        <svg class="icon nav-toggle__icon nav-toggle__icon--open" width="24" height="24"><use href="#icon-menu"></use></svg>
+        <svg class="icon nav-toggle__icon nav-toggle__icon--close" width="24" height="24"><use href="#icon-close"></use></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="home">
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__glow"></div>
+        <div class="hero__grid"></div>
+        <svg class="hero__skyline" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="40" y="120" width="70" height="140" fill="#14181c"/>
+          <rect x="120" y="70" width="55" height="190" fill="#181d22"/>
+          <rect x="185" y="150" width="45" height="110" fill="#14181c"/>
+          <rect x="240" y="40" width="65" height="220" fill="#1b2127"/>
+          <rect x="320" y="100" width="50" height="160" fill="#14181c"/>
+          <rect x="385" y="60" width="60" height="200" fill="#181d22"/>
+          <rect x="460" y="130" width="40" height="130" fill="#14181c"/>
+          <rect x="515" y="20" width="70" height="240" fill="#1e252c"/>
+          <rect x="600" y="90" width="55" height="170" fill="#181d22"/>
+          <rect x="670" y="140" width="45" height="120" fill="#14181c"/>
+          <rect x="730" y="55" width="65" height="205" fill="#1b2127"/>
+          <rect x="810" y="105" width="50" height="155" fill="#181d22"/>
+          <rect x="875" y="30" width="70" height="230" fill="#1e252c"/>
+          <rect x="960" y="120" width="45" height="140" fill="#14181c"/>
+          <rect x="1020" y="75" width="60" height="185" fill="#181d22"/>
+          <rect x="1095" y="145" width="40" height="115" fill="#14181c"/>
+          <rect x="1150" y="50" width="65" height="210" fill="#1b2127"/>
+          <rect x="1230" y="115" width="50" height="145" fill="#181d22"/>
+          <rect x="1295" y="85" width="55" height="175" fill="#14181c"/>
+          <rect x="1365" y="135" width="45" height="125" fill="#181d22"/>
+        </svg>
+        <svg class="hero__car" viewBox="0 0 200 90" aria-hidden="true">
+          <use href="#icon-car"></use>
+        </svg>
+      </div>
+
+      <div class="container hero__inner">
+        <span class="badge fade-up">
+          <span class="badge__dot"></span> Limited Availability
+        </span>
+
+        <h1 class="hero__headline fade-up">
+          Rent.<br>
+          Drive.<br>
+          <span class="text-accent">Earn.</span>
+        </h1>
+
+        <p class="hero__subhead fade-up">
+          Reliable weekly rental vehicles for Uber, Lyft, DoorDash, Instacart, Amazon Flex and personal use.
+        </p>
+
+        <ul class="hero__features fade-up">
+          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Insurance Included</li>
+          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> No Credit Check</li>
+          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Unlimited Miles</li>
+          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> 21+ to Rent</li>
+        </ul>
+
+        <div class="hero__price fade-up">
+          <span class="hero__price-label">Starting at</span>
+          <span class="hero__price-value">$350<span>/week</span></span>
+        </div>
+
+        <div class="hero__actions fade-up">
+          <a href="#apply" class="btn btn--primary btn--lg">
+            Apply Now
+            <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+          </a>
+          <a href="#pricing" class="btn btn--outline btn--lg">View Pricing</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TRUST BAR ==================== -->
+    <section class="trust-bar" aria-label="Why drivers choose Flex Rentals">
+      <div class="container trust-bar__grid">
+        <div class="trust-card fade-up">
+          <div class="trust-card__icon"><svg class="icon"><use href="#icon-shield"></use></svg></div>
+          <h3>Insurance Included</h3>
+          <p>Every vehicle comes fully insured, so you can get on the road with confidence.</p>
+        </div>
+        <div class="trust-card fade-up">
+          <div class="trust-card__icon"><svg class="icon"><use href="#icon-infinity"></use></svg></div>
+          <h3>Unlimited Miles</h3>
+          <p>No mileage caps, no surprise fees. Drive as much as you need to hit your goals.</p>
+        </div>
+        <div class="trust-card fade-up">
+          <div class="trust-card__icon"><svg class="icon"><use href="#icon-no-card"></use></svg></div>
+          <h3>No Credit Check</h3>
+          <p>Your credit history won't hold you back. Approval is based on your ability to drive.</p>
+        </div>
+        <div class="trust-card fade-up">
+          <div class="trust-card__icon"><svg class="icon"><use href="#icon-user"></use></svg></div>
+          <h3>21+ to Rent</h3>
+          <p>Simple age requirement — no complicated eligibility rules to worry about.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="container">
+        <p class="eyebrow fade-up">How It Works</p>
+        <h2 class="section-title fade-up">Get on the road in 3 easy steps.</h2>
+
+        <div class="steps">
+          <div class="steps__line" aria-hidden="true"><span class="steps__line-fill"></span></div>
+
+          <div class="step fade-up">
+            <div class="step__icon"><svg class="icon"><use href="#icon-document"></use></svg></div>
+            <span class="step__number">1</span>
+            <h3>Apply Online</h3>
+            <p>Fill out our quick application in minutes — no paperwork hassle.</p>
+          </div>
+          <div class="step fade-up">
+            <div class="step__icon"><svg class="icon"><use href="#icon-upload"></use></svg></div>
+            <span class="step__number">2</span>
+            <h3>Upload Documents</h3>
+            <p>Submit your license, insurance and ID for fast verification.</p>
+          </div>
+          <div class="step fade-up">
+            <div class="step__icon"><svg class="icon"><use href="#icon-car"></use></svg></div>
+            <span class="step__number">3</span>
+            <h3>Drive Away</h3>
+            <p>Get approved, pick up your vehicle and start earning the same week.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PRICING ==================== -->
+    <section class="pricing" id="pricing">
+      <div class="container pricing__grid">
+        <div class="pricing__copy fade-up">
+          <p class="eyebrow">Weekly Rentals</p>
+          <h2 class="section-title">Simple, transparent pricing.</h2>
+          <p class="section-lead">One flat weekly rate. No hidden fees, no long-term contracts, no surprises — just everything you need to keep driving and earning.</p>
+          <a href="#apply" class="btn btn--primary btn--lg">
+            Apply Now
+            <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+          </a>
+        </div>
+
+        <div class="pricing-card fade-up">
+          <p class="pricing-card__label">Starting at</p>
+          <p class="pricing-card__price">$350<span>/week</span></p>
+          <ul class="pricing-card__list">
+            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Insurance Included</li>
+            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Unlimited Miles</li>
+            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Routine Maintenance</li>
+            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Roadside Assistance</li>
+          </ul>
+          <a href="#apply" class="btn btn--primary btn--block">Apply Now</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FLEET ==================== -->
+    <section class="fleet" id="fleet">
+      <div class="container">
+        <p class="eyebrow fade-up">Quality Vehicles. Reliable Performance.</p>
+        <h2 class="section-title fade-up">Our Fleet</h2>
+
+        <div class="fleet__grid">
+          <article class="fleet-card fade-up">
+            <div class="fleet-card__media">
+              <svg class="fleet-card__illustration" viewBox="0 0 240 120" aria-hidden="true">
+                <ellipse cx="120" cy="98" rx="95" ry="8" fill="#000" opacity="0.35"/>
+                <path d="M25 78 L40 45 Q50 32 70 32 L150 32 Q168 32 178 48 L200 78 Z" fill="#20262c" stroke="#34C759" stroke-width="1.5" opacity="0.9"/>
+                <path d="M62 40 L78 40 L86 60 L54 60 Z" fill="#0f1114" opacity="0.6"/>
+                <path d="M92 40 L146 40 L156 60 L100 60 Z" fill="#0f1114" opacity="0.6"/>
+                <rect x="20" y="78" width="185" height="14" rx="4" fill="#181d22"/>
+                <circle cx="65" cy="92" r="16" fill="#0f1114" stroke="#34C759" stroke-width="2"/>
+                <circle cx="65" cy="92" r="6" fill="#20262c"/>
+                <circle cx="165" cy="92" r="16" fill="#0f1114" stroke="#34C759" stroke-width="2"/>
+                <circle cx="165" cy="92" r="6" fill="#20262c"/>
+              </svg>
+            </div>
+            <div class="fleet-card__body">
+              <h3>Ford Fusion <span>or similar</span></h3>
+              <p>Great on gas, smooth ride — perfect for rideshare and daily driving.</p>
+              <p class="fleet-card__price">From $350/week</p>
+            </div>
+          </article>
+
+          <article class="fleet-card fade-up">
+            <div class="fleet-card__media">
+              <svg class="fleet-card__illustration" viewBox="0 0 240 120" aria-hidden="true">
+                <ellipse cx="120" cy="98" rx="95" ry="8" fill="#000" opacity="0.35"/>
+                <path d="M28 78 Q30 46 62 40 Q80 30 130 32 Q165 34 182 50 L198 78 Z" fill="#e8e9eb" stroke="#34C759" stroke-width="1.5" opacity="0.95"/>
+                <path d="M68 42 L98 40 L104 58 L66 58 Z" fill="#14181c" opacity="0.75"/>
+                <path d="M108 40 L150 41 L160 58 L112 58 Z" fill="#14181c" opacity="0.75"/>
+                <rect x="22" y="78" width="185" height="14" rx="4" fill="#c9cbcf"/>
+                <circle cx="68" cy="92" r="16" fill="#14181c" stroke="#34C759" stroke-width="2"/>
+                <circle cx="68" cy="92" r="6" fill="#e8e9eb"/>
+                <circle cx="168" cy="92" r="16" fill="#14181c" stroke="#34C759" stroke-width="2"/>
+                <circle cx="168" cy="92" r="6" fill="#e8e9eb"/>
+              </svg>
+            </div>
+            <div class="fleet-card__body">
+              <h3>Toyota Prius <span>or similar</span></h3>
+              <p>Fuel efficient and dependable — ideal for maximizing earnings per mile.</p>
+              <p class="fleet-card__price">From $350/week</p>
+            </div>
+          </article>
+        </div>
+
+        <p class="fleet__note fade-up">
+          <svg class="icon icon--sm"><use href="#icon-check"></use></svg>
+          Availability changes weekly. Apply today to reserve the next available vehicle.
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== REQUIREMENTS ==================== -->
+    <section class="requirements" id="requirements">
+      <div class="container requirements__grid">
+        <div class="requirement-card fade-up">
+          <div class="requirement-card__icon"><svg class="icon"><use href="#icon-user"></use></svg></div>
+          <h3>21+ Age</h3>
+          <p>Drivers must be at least 21 years old to qualify for a rental.</p>
+        </div>
+        <div class="requirement-card fade-up">
+          <div class="requirement-card__icon"><svg class="icon"><use href="#icon-id-card"></use></svg></div>
+          <h3>Valid Driver's License</h3>
+          <p>A current, valid driver's license is required at the time of application.</p>
+        </div>
+        <div class="requirement-card fade-up">
+          <div class="requirement-card__icon"><svg class="icon"><use href="#icon-shield"></use></svg></div>
+          <h3>Insurance Coverage</h3>
+          <p>Vehicles are rented with insurance included — no separate policy needed.</p>
+        </div>
+        <div class="requirement-card fade-up">
+          <div class="requirement-card__icon"><svg class="icon"><use href="#icon-cash"></use></svg></div>
+          <h3>Weekly Payment</h3>
+          <p>A simple weekly rental payment keeps you on the road with no long-term contract.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== APPLICATION SECTION ==================== -->
+    <!--
+      PLACEHOLDER: This section is a static stand-in for the application form.
+      It will be replaced with an embedded GoHighLevel form. Keep the wrapper
+      #apply and .apply-card structure so styling stays consistent when the
+      GHL embed (iframe/snippet) is dropped in.
+    -->
+    <section class="apply" id="apply">
+      <div class="container apply__grid">
+        <div class="apply__copy fade-up">
+          <h2 class="section-title">Ready to start earning?</h2>
+          <p class="section-lead">Apply today and we'll get you on the road fast. Vehicle availability changes weekly — don't wait.</p>
+          <ul class="apply__points">
+            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Quick online application</li>
+            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Fast approval</li>
+            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Limited availability — apply now</li>
+          </ul>
+        </div>
+
+        <form class="apply-card fade-up" id="applyForm" novalidate>
+          <div class="apply-card__row">
+            <div class="form-field">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="fullName" autocomplete="name" required />
+            </div>
+            <div class="form-field">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" required />
+            </div>
+          </div>
+          <div class="apply-card__row">
+            <div class="form-field">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+            </div>
+            <div class="form-field">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" autocomplete="address-level2" required />
+            </div>
+          </div>
+          <div class="apply-card__row">
+            <div class="form-field">
+              <label for="licenseState">Driver's License State</label>
+              <select id="licenseState" name="licenseState" required>
+                <option value="" disabled selected>Select state</option>
+                <option value="GA">Georgia</option>
+                <option value="AL">Alabama</option>
+                <option value="FL">Florida</option>
+                <option value="SC">South Carolina</option>
+                <option value="TN">Tennessee</option>
+                <option value="NC">North Carolina</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="platform">Which platform will you drive for?</label>
+              <select id="platform" name="platform" required>
+                <option value="" disabled selected>Select platform</option>
+                <option value="uber">Uber</option>
+                <option value="lyft">Lyft</option>
+                <option value="doordash">DoorDash</option>
+                <option value="instacart">Instacart</option>
+                <option value="amazon-flex">Amazon Flex</option>
+                <option value="personal">Personal Use</option>
+                <option value="multiple">Multiple Platforms</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block btn--lg">
+            Apply Now
+            <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+          </button>
+
+          <p class="apply-card__status" id="applyFormStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==================== FAQ ==================== -->
+    <section class="faq" id="faq">
+      <div class="container">
+        <p class="eyebrow fade-up">FAQ</p>
+        <h2 class="section-title fade-up">Frequently asked questions.</h2>
+
+        <div class="accordion" id="faqAccordion">
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Can I drive Uber?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>Yes. Every vehicle in our fleet is eligible for Uber, so you can start driving as soon as you're approved and activated on the platform.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Can I drive Lyft?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>Absolutely. Our vehicles also meet Lyft's requirements, so you're free to drive for Lyft, Uber, or both at the same time.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>How long is approval?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>Most applications are reviewed quickly once your documents are submitted. Many drivers are approved and on the road within the same week.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>What documents are required?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>You'll need a valid driver's license, proof of insurance eligibility, and — if applicable — your active rideshare or delivery platform account details.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Is insurance included?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>Yes. Every weekly rental includes insurance coverage, so there's no need to source a separate policy before you can drive.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Do you require a deposit?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>Deposit requirements are confirmed during the application process and depend on the vehicle and rental terms. Our team will walk you through the exact amount before pickup.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>What payment methods do you accept?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>We accept major debit cards and standard electronic payment methods for weekly rental payments. Our team can confirm all accepted options during onboarding.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div class="site-footer__brand">
+        <a href="#home" class="logo logo--footer" aria-label="Flex Rentals — Home">
+          <span class="logo__mark">FLEX</span>
+          <span class="logo__sub">RENTALS</span>
+        </a>
+        <p class="site-footer__tagline">Rent. Drive. Earn.</p>
+        <p class="site-footer__location">
+          <svg class="icon icon--sm"><use href="#icon-location"></use></svg>
+          Atlanta, Georgia
+        </p>
+      </div>
+
+      <nav class="site-footer__links" aria-label="Footer">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#requirements">Requirements</a></li>
+          <li><a href="#apply">Apply</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-footer__social">
+        <h4>Follow Us</h4>
+        <div class="social-icons">
+          <a href="#" aria-label="Flex Rentals on Facebook" class="social-icons__link">
+            <svg class="icon"><use href="#icon-facebook"></use></svg>
+          </a>
+          <a href="#" aria-label="Flex Rentals on Instagram" class="social-icons__link">
+            <svg class="icon"><use href="#icon-instagram"></use></svg>
+          </a>
+          <a href="#apply" aria-label="Message Flex Rentals" class="social-icons__link">
+            <svg class="icon"><use href="#icon-message"></use></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>&copy; <span id="footerYear">2026</span> Flex Rentals LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js" defer></script>
+</body>
+</html>
