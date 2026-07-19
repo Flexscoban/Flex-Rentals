@@ -203,6 +203,7 @@
 
     var TOTAL_STEPS = 5;
     var currentStep = 1;
+    var isSubmitting = false;
 
     var steps = Array.prototype.slice.call(form.querySelectorAll('.apply-step'));
     var progressItems = Array.prototype.slice.call(document.querySelectorAll('.apply-progress__item'));
@@ -268,15 +269,15 @@
       // Rental option radios — one must be selected
       var rentalGroup = stepEl.querySelector('.rental-options');
       if (rentalGroup) {
-        var anyRental = rentalGroup.querySelectorAll('input[name="rentalOption"]:checked').length > 0;
+        var anyRental = rentalGroup.querySelectorAll('input[name="rental_option"]:checked').length > 0;
         if (!anyRental) {
           valid = false;
           stepEl.classList.add('has-error');
         }
       }
 
-      // Consent checkbox
-      var consent = stepEl.querySelector('#consent');
+      // Consent / certification checkbox
+      var consent = stepEl.querySelector('#application_certification');
       if (consent && !consent.checked) {
         valid = false;
         stepEl.classList.add('has-error');
@@ -350,25 +351,25 @@
         .map(function (cb) { return cb.value; })
         .join(', ') || '—';
 
-      var rentalOptionEl = form.querySelector('input[name="rentalOption"]:checked');
+      var rentalOptionEl = form.querySelector('input[name="rental_option"]:checked');
       var rentalOption = rentalOptionEl ? rentalOptionEl.value : '—';
 
-      var smsConsentEl = document.getElementById('smsConsent');
+      var smsConsentEl = document.getElementById('sms_consent');
 
       var rows = [
-        ['Name', (fieldValue('firstName') + ' ' + fieldValue('lastName')).trim() || '—'],
+        ['Name', (fieldValue('first_name') + ' ' + fieldValue('last_name')).trim() || '—'],
         ['Phone', fieldValue('phone') || '—'],
         ['Email', fieldValue('email') || '—'],
         ['SMS Updates', smsConsentEl && smsConsentEl.checked ? 'Opted in' : 'Not opted in'],
-        ['Date of Birth', fieldValue('dob') || '—'],
-        ['License Number', fieldValue('licenseNumber') || '—'],
-        ['License State', fieldLabelForSelect('licenseState') || '—'],
-        ['License — Front', fileName('licenseFront')],
-        ['License — Back', fileName('licenseBack')],
+        ['Date of Birth', fieldValue('date_of_birth') || '—'],
+        ['License Number', fieldValue('drivers_license_number') || '—'],
+        ['License State', fieldLabelForSelect('drivers_license_state') || '—'],
+        ['License — Front', fileName('license_front')],
+        ['License — Back', fileName('license_back')],
         ['Platforms', platforms],
-        ['Platform Screenshot', fileName('platformScreenshot')],
+        ['Platform Screenshot', fileName('platform_screenshot')],
         ['Rental Option', rentalOption],
-        ['Notes', fieldValue('notes') || '—']
+        ['Notes', fieldValue('rental_notes') || '—']
       ];
 
       reviewEl.innerHTML = rows.map(function (row) {
@@ -387,35 +388,25 @@
     form.addEventListener('submit', function (event) {
       event.preventDefault();
 
+      if (isSubmitting) return;
       if (!validateStep(currentStepEl())) return;
 
-      var payload = {
-        firstName: fieldValue('firstName'),
-        lastName: fieldValue('lastName'),
-        phone: fieldValue('phone'),
-        email: fieldValue('email'),
-        smsConsent: !!document.getElementById('smsConsent').checked,
-        dob: fieldValue('dob'),
-        licenseNumber: fieldValue('licenseNumber'),
-        licenseState: fieldValue('licenseState'),
-        licenseFrontFileName: fileName('licenseFront'),
-        licenseBackFileName: fileName('licenseBack'),
-        platforms: Array.prototype.slice
-          .call(form.querySelectorAll('input[name="platforms"]:checked'))
-          .map(function (cb) { return cb.value; }),
-        platformScreenshotFileName: fileName('platformScreenshot'),
-        rentalOption: (function () {
-          var el = form.querySelector('input[name="rentalOption"]:checked');
-          return el ? el.value : '';
-        })(),
-        notes: fieldValue('notes')
-      };
+      var formData = new FormData(form);
 
-      submitApplicationToGHL(payload, form)
+      isSubmitting = true;
+      if (submitBtn) submitBtn.disabled = true;
+      if (backBtn) backBtn.disabled = true;
+      if (statusEl) {
+        statusEl.style.color = '';
+        statusEl.textContent = 'Submitting your application…';
+      }
+
+      submitApplicationToGHL(formData)
         .then(function () {
           form.hidden = true;
           if (progressRoot) progressRoot.hidden = true;
           if (introEl) introEl.hidden = true;
+          if (statusEl) statusEl.textContent = '';
           if (successEl) {
             successEl.hidden = false;
             successEl.focus();
@@ -423,10 +414,18 @@
           }
         })
         .catch(function (err) {
+          // Leave every answer in place — the applicant should never have to
+          // redo the form because of a network/server hiccup.
           if (statusEl) {
-            statusEl.textContent = 'Something went wrong submitting your application. Please try again or contact us directly.';
+            statusEl.style.color = '#ff8a8a';
+            statusEl.textContent = 'Something went wrong submitting your application. Please try again, or call/text us at (404) 738-6601 and we’ll finish it with you.';
           }
           console.error('Flex Rentals application submission failed:', err);
+        })
+        .then(function () {
+          isSubmitting = false;
+          if (submitBtn) submitBtn.disabled = false;
+          if (backBtn) backBtn.disabled = false;
         });
     });
 
@@ -434,59 +433,38 @@
   })();
 
   /* ==================================================================
-     GHL INTEGRATION POINT
-     ==================================================================
-     This site was built without GoHighLevel account credentials or a
-     form embed code, so the application above cannot reach a real CRM
-     yet. submitApplicationToGHL() is the single place that needs to
-     change to go live. Two ways to finish this:
+     GHL INTEGRATION — submits the application (including uploaded
+     files) as multipart FormData to a serverless function, which is the
+     only place the GoHighLevel private integration token lives. See
+     GHL-FORM-INTEGRATION.md at the project root for the full setup
+     guide (custom fields to create in GHL, environment variables,
+     deploying the function, and how to test it end-to-end).
 
-     OPTION A — Native GHL form embed (recommended for Phase 1):
-       1. Build a form in GHL with fields matching the payload shape
-          below (Funnels/Websites > Forms, or a Survey/Form builder).
-       2. Copy its embed snippet ("</> Add to Website").
-       3. Delete the <form id="applyForm"> markup in index.html
-          (the #apply section wrapper and progress indicator can stay)
-          and paste the GHL embed in its place.
-       4. Delete the JS block above this comment — GHL's embed handles
-          its own submission, validation and success state.
-
-     OPTION B — Keep this custom UI, POST to a GHL webhook/API:
-       1. In GHL, create an inbound webhook (Automation > Workflows >
-          "Inbound Webhook" trigger) or use the GHL API v2 "Create
-          Contact" / "Create Opportunity" endpoints with a private
-          integration token.
-       2. Replace the body of submitApplicationToGHL() below with a
-          fetch() POST to that webhook/API URL, sending `payload`.
-       3. File uploads (license front/back, platform screenshot) are
-          NOT sent anywhere yet — this build only validates that a
-          file was chosen and reports its filename. To actually
-          collect the files, either (a) point the file inputs at a
-          GHL file-upload-enabled form field, or (b) upload files to
-          your own storage first and send the resulting URLs in
-          `payload` instead of filenames.
-       4. Map `payload.rentalOption` and `payload.platforms` to
-          whatever custom fields/tags you use to drive the CRM
-          pipeline (New Application -> Under Review -> Approved ->
-          Pickup Scheduled -> Active Rental -> Maintenance -> Vehicle
-          Returned -> Repeat Customer / Do Not Rent).
-
-     Until either option is wired up, this function only simulates a
-     successful submission so the UI/UX can be reviewed end-to-end.
-  */
-  function submitApplicationToGHL(payload, formEl) {
-    // TODO: replace with a real GHL webhook/API call, e.g.:
-    //
-    // return fetch('https://YOUR-GHL-WEBHOOK-URL', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(payload)
-    // }).then(function (res) {
-    //   if (!res.ok) throw new Error('GHL submission failed: ' + res.status);
-    // });
-
-    console.log('[Flex Rentals] Application payload ready for GHL integration:', payload);
-    return Promise.resolve();
+     The endpoint below (/api/submit-application) is served by:
+       - netlify/functions/submit-application.js (Netlify Functions)
+       - api/submit-application.js               (Vercel Functions)
+       - functions/api/submit-application.js     (Cloudflare Pages Functions)
+     all three share the same logic in serverless/lib/ghl.js. Deploy to
+     whichever platform you use — the frontend code below never changes.
+     ================================================================== */
+  function submitApplicationToGHL(formData) {
+    return fetch('/api/submit-application', {
+      method: 'POST',
+      body: formData
+    }).then(function (res) {
+      return res
+        .json()
+        .catch(function () {
+          return {};
+        })
+        .then(function (data) {
+          if (!res.ok || !data || data.ok !== true) {
+            var message = (data && data.error) || 'GHL submission failed (' + res.status + ').';
+            throw new Error(message);
+          }
+          return data;
+        });
+    });
   }
 
   /* ==================================================================

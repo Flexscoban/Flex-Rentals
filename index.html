@@ -634,13 +634,13 @@
             <legend class="apply-step__title">Basic Information</legend>
             <div class="apply-card__row">
               <div class="form-field">
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" name="firstName" autocomplete="given-name" required />
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" autocomplete="given-name" required />
                 <span class="form-field__error">Enter your first name.</span>
               </div>
               <div class="form-field">
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" name="lastName" autocomplete="family-name" required />
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" autocomplete="family-name" required />
                 <span class="form-field__error">Enter your last name.</span>
               </div>
             </div>
@@ -658,7 +658,7 @@
             </div>
 
             <label class="apply-consent">
-              <input type="checkbox" id="smsConsent" name="smsConsent" />
+              <input type="checkbox" id="sms_consent" name="sms_consent" />
               <span>I agree to receive SMS text messages from Flex Rentals about my application, approval, pickup scheduling, payment and maintenance reminders, and rental updates. Message frequency varies. Message and data rates may apply. Reply STOP to opt out, HELP for help. Consent is not a condition of purchase. See our <a href="sms-terms.html">SMS Terms</a> and <a href="privacy-policy.html">Privacy Policy</a>.</span>
             </label>
           </fieldset>
@@ -668,19 +668,19 @@
             <legend class="apply-step__title">Driver Information</legend>
             <div class="apply-card__row">
               <div class="form-field">
-                <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" name="dob" required />
+                <label for="date_of_birth">Date of Birth</label>
+                <input type="date" id="date_of_birth" name="date_of_birth" required />
                 <span class="form-field__error">Enter your date of birth.</span>
               </div>
               <div class="form-field">
-                <label for="licenseNumber">Driver's License Number</label>
-                <input type="text" id="licenseNumber" name="licenseNumber" required />
+                <label for="drivers_license_number">Driver's License Number</label>
+                <input type="text" id="drivers_license_number" name="drivers_license_number" required />
                 <span class="form-field__error">Enter your license number.</span>
               </div>
             </div>
             <div class="form-field">
-              <label for="licenseState">Driver's License State</label>
-              <select id="licenseState" name="licenseState" required>
+              <label for="drivers_license_state">Driver's License State</label>
+              <select id="drivers_license_state" name="drivers_license_state" required>
                 <option value="" disabled selected>Select state</option>
                 <option value="GA">Georgia</option>
                 <option value="AL">Alabama</option>
@@ -694,23 +694,23 @@
             </div>
             <div class="apply-card__row">
               <div class="form-field form-field--upload">
-                <label for="licenseFront">License — Front</label>
-                <label class="upload-dropzone" for="licenseFront">
+                <label for="license_front">License — Front</label>
+                <label class="upload-dropzone" for="license_front">
                   <svg class="icon"><use href="#icon-upload-cloud"></use></svg>
                   <span class="upload-dropzone__text">Tap to upload photo</span>
                   <span class="upload-dropzone__filename"></span>
                 </label>
-                <input type="file" id="licenseFront" name="licenseFront" accept="image/*,.pdf" class="upload-input" required />
+                <input type="file" id="license_front" name="license_front" accept="image/*,.pdf" class="upload-input" required />
                 <span class="form-field__error">Upload the front of your license.</span>
               </div>
               <div class="form-field form-field--upload">
-                <label for="licenseBack">License — Back</label>
-                <label class="upload-dropzone" for="licenseBack">
+                <label for="license_back">License — Back</label>
+                <label class="upload-dropzone" for="license_back">
                   <svg class="icon"><use href="#icon-upload-cloud"></use></svg>
                   <span class="upload-dropzone__text">Tap to upload photo</span>
                   <span class="upload-dropzone__filename"></span>
                 </label>
-                <input type="file" id="licenseBack" name="licenseBack" accept="image/*,.pdf" class="upload-input" required />
+                <input type="file" id="license_back" name="license_back" accept="image/*,.pdf" class="upload-input" required />
                 <span class="form-field__error">Upload the back of your license.</span>
               </div>
             </div>
@@ -733,13 +733,13 @@
               <span class="form-field__error form-field__error--group">Select at least one platform.</span>
             </div>
             <div class="form-field form-field--upload">
-              <label for="platformScreenshot">Active Platform Screenshot</label>
-              <label class="upload-dropzone" for="platformScreenshot">
+              <label for="platform_screenshot">Active Platform Screenshot</label>
+              <label class="upload-dropzone" for="platform_screenshot">
                 <svg class="icon"><use href="#icon-image"></use></svg>
                 <span class="upload-dropzone__text">Tap to upload screenshot</span>
                 <span class="upload-dropzone__filename"></span>
               </label>
-              <input type="file" id="platformScreenshot" name="platformScreenshot" accept="image/*" class="upload-input" required />
+              <input type="file" id="platform_screenshot" name="platform_screenshot" accept="image/*" class="upload-input" required />
               <span class="form-field__error">Upload a screenshot of your active account.</span>
             </div>
           </fieldset>
@@ -749,7 +749,7 @@
             <legend class="apply-step__title">Rental Preference</legend>
             <div class="rental-options">
               <label class="rental-option-card">
-                <input type="radio" name="rentalOption" value="Deposit Option" required />
+                <input type="radio" name="rental_option" value="Deposit Option" required />
                 <span class="rental-option-card__badge">Recommended</span>
                 <h3>Deposit Option</h3>
                 <p class="rental-option-card__headline">Save $25 per week</p>
@@ -761,7 +761,7 @@
                 </ul>
               </label>
               <label class="rental-option-card">
-                <input type="radio" name="rentalOption" value="No Deposit Option" required />
+                <input type="radio" name="rental_option" value="No Deposit Option" required />
                 <h3>No Deposit Option</h3>
                 <p class="rental-option-card__headline">Get on the road with less money upfront</p>
                 <ul>
@@ -776,8 +776,8 @@
             <p class="rental-options__note">Choosing an option does not lock you in — the Flex Rentals team will review the best available rental option with you before pickup.</p>
 
             <div class="form-field">
-              <label for="notes">Notes About Your Rental Needs <span class="form-field__optional">(optional)</span></label>
-              <textarea id="notes" name="notes" rows="3"></textarea>
+              <label for="rental_notes">Notes About Your Rental Needs <span class="form-field__optional">(optional)</span></label>
+              <textarea id="rental_notes" name="rental_notes" rows="3"></textarea>
             </div>
           </fieldset>
 
@@ -786,7 +786,7 @@
             <legend class="apply-step__title">Review &amp; Submit</legend>
             <div class="apply-review" id="applyReview"></div>
             <label class="apply-consent">
-              <input type="checkbox" id="consent" name="consent" required />
+              <input type="checkbox" id="application_certification" name="application_certification" required />
               <span>I confirm the information provided is accurate and I consent to Flex Rentals contacting me about my application.</span>
             </label>
             <span class="form-field__error">You must confirm before submitting.</span>
@@ -929,5 +929,11 @@
   </footer>
 
   <script src="js/script.js" defer></script>
+
+  <!-- GoHighLevel External Tracking -->
+  <script
+    src="https://link.msgsndr.com/js/external-tracking.js"
+    data-tracking-id="tk_2c7b06fd3a7b4b5498e7848782a3509e"
+  ></script>
 </body>
 </html>

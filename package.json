@@ -1,0 +1,9 @@
+{
+  "name": "flex-rentals",
+  "private": true,
+  "type": "module",
+  "description": "Flex Rentals static site + serverless GoHighLevel application-submission function.",
+  "engines": {
+    "node": ">=18"
+  }
+}
