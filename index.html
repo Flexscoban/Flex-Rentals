@@ -42,86 +42,105 @@
 </head>
 <body>
 
-  <!-- ==================== SVG ICON SPRITE ==================== -->
+  <!-- ==================== SVG ICON SPRITE (Lucide-style outline icons) ==================== -->
+  <!-- Icon ids match their Lucide (lucide.dev) equivalents 1:1 so this sprite can be
+       swapped for the real @lucide/lucide-static SVGs later with no markup changes. -->
   <svg class="icon-sprite" aria-hidden="true" style="display:none;">
-    <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <symbol id="icon-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2.5l7.5 3.2v5.4c0 5-3.2 8.9-7.5 10.4-4.3-1.5-7.5-5.4-7.5-10.4V5.7L12 2.5z"/>
       <path d="M8.8 12.2l2.2 2.2 4.2-4.6"/>
     </symbol>
-    <symbol id="icon-no-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2.5" y="5.5" width="19" height="13" rx="2"/>
-      <path d="M2.5 9.8h19"/>
-      <path d="M6 15h4"/>
+    <symbol id="icon-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.5 2.5L5 13.5h6l-1 8 7.5-11h-6l1-8z"/>
     </symbol>
-    <symbol id="icon-infinity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M7 9a3.5 3.5 0 0 0 0 7c2.5 0 3.8-2.2 5-4s2.5-4 5-4a3.5 3.5 0 0 1 0 7c-2.5 0-3.8-2.2-5-4S9.5 9 7 9z"/>
+    <symbol id="icon-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
     </symbol>
-    <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="8" r="3.5"/>
-      <path d="M4.5 20.5c1.4-3.6 4.3-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/>
+    <symbol id="icon-car-front" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 17h14M6.5 17V9.5a2 2 0 0 1 1.6-2l1.7-2.3a2 2 0 0 1 1.6-.8h2.2a2 2 0 0 1 1.6.8l1.7 2.3a2 2 0 0 1 1.6 2V17"/>
+      <circle cx="8.5" cy="17" r="1.6"/>
+      <circle cx="15.5" cy="17" r="1.6"/>
+      <path d="M6.5 12h11M9 6.5h6"/>
     </symbol>
-    <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <symbol id="icon-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="19" r="2.2"/>
+      <circle cx="18" cy="5" r="2.2"/>
+      <path d="M8.2 19H15a3 3 0 0 0 3-3v-1a3 3 0 0 0-3-3H9a3 3 0 0 1-3-3v-1a3 3 0 0 1 3-3h6.8"/>
+    </symbol>
+    <symbol id="icon-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <rect x="3" y="5" width="18" height="16" rx="2"/>
       <path d="M3 9.5h18M8 3v4M16 3v4"/>
+      <path d="M7.5 13.5h1M7.5 17h1M11.5 13.5h1M11.5 17h1M15.5 13.5h1"/>
     </symbol>
-    <symbol id="icon-cash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2.5" y="6.5" width="19" height="11" rx="2"/>
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M5.5 9v6M18.5 9v6"/>
+    <symbol id="icon-badge-dollar-sign" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2.5l1.8 1.4 2.2-.5 1 2 2 1-.5 2.2 1.4 1.8-1.4 1.8.5 2.2-2 1-1 2.2-2.2-.5L12 21.5l-1.8-1.4-2.2.5-1-2-2-1 .5-2.2L4 12l1.4-1.8-.5-2.2 2-1 1-2.2 2.2.5z"/>
+      <path d="M9.8 14.2c.3.7 1 1.1 1.9 1.1 1.2 0 2-.6 2-1.6 0-.9-.6-1.3-1.8-1.6l-.5-.1c-1.1-.3-1.7-.8-1.7-1.6 0-.9.8-1.5 1.9-1.5.9 0 1.6.4 1.9 1.1M12 8.3v1M12 15.3v1"/>
     </symbol>
-    <symbol id="icon-headset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 13v-1a8 8 0 0 1 16 0v1"/>
-      <rect x="2.5" y="13" width="4" height="6" rx="1.5"/>
-      <rect x="17.5" y="13" width="4" height="6" rx="1.5"/>
-      <path d="M20 19v.5a3.5 3.5 0 0 1-3.5 3.5H13"/>
+    <symbol id="icon-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="7" y="2.5" width="10" height="19" rx="2"/>
+      <path d="M11 19.3h2"/>
     </symbol>
-    <symbol id="icon-document" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M7 2.5h7l4 4V21a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z"/>
-      <path d="M14 2.5V7h4M9 12.5h6M9 16h6"/>
-    </symbol>
-    <symbol id="icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <symbol id="icon-upload-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <path d="M7 17.5H6a4 4 0 0 1-.6-7.95 5.5 5.5 0 0 1 10.7-2A4.5 4.5 0 0 1 17.5 17.5h-1.5"/>
       <path d="M12 21v-8M9 15.5 12 12.5 15 15.5"/>
     </symbol>
-    <symbol id="icon-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3.5 14.5l1.6-5A2 2 0 0 1 7 8h10a2 2 0 0 1 1.9 1.5l1.6 5"/>
-      <path d="M3 14.5h18v3.5a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1V17H6.5v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3.5z"/>
-      <circle cx="7" cy="17" r="1.6"/>
-      <circle cx="17" cy="17" r="1.6"/>
+    <symbol id="icon-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 2.5h7l4 4V21a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z"/>
+      <path d="M14 2.5V7h4M9 12.5h6M9 16h6"/>
     </symbol>
     <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M4 12.5l5.5 5.5L20 7"/>
     </symbol>
-    <symbol id="icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M6 9l6 6 6-6"/>
+    </symbol>
+    <symbol id="icon-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 6l-6 6 6 6"/>
+    </symbol>
+    <symbol id="icon-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 6l6 6-6 6"/>
     </symbol>
     <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M4 12h16M13 5l7 7-7 7"/>
+    </symbol>
+    <symbol id="icon-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 12H4M11 5l-7 7 7 7"/>
     </symbol>
     <symbol id="icon-id-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <rect x="2.5" y="5" width="19" height="14" rx="2"/>
       <circle cx="8" cy="12" r="2.2"/>
       <path d="M5.5 16.2c.6-1.5 1.5-2.2 2.5-2.2s1.9.7 2.5 2.2M14 9.5h4M14 12.5h4M14 15.5h2.5"/>
     </symbol>
-    <symbol id="icon-location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <symbol id="icon-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2"/>
+      <circle cx="8.5" cy="9.5" r="1.5"/>
+      <path d="M21 15.5l-5.5-5.5L5 20"/>
+    </symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="3.5"/>
+      <path d="M4.5 20.5c1.4-3.6 4.3-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/>
+    </symbol>
+    <symbol id="icon-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.6 1.6 6.8L12 17.6l-6.2 3.3 1.6-6.8-5.2-4.6 6.9-.7z"/>
+    </symbol>
+    <symbol id="icon-map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 21.5S5 15 5 9.8a7 7 0 0 1 14 0C19 15 12 21.5 12 21.5z"/>
       <circle cx="12" cy="9.8" r="2.5"/>
     </symbol>
-    <symbol id="icon-facebook" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M15 8.5h2V5h-2.5A3.5 3.5 0 0 0 11 8.5V11H9v3.5h2V21h3.5v-6.5h2.4l.6-3.5h-3V9c0-.5.3-.5.5-.5z"/>
+    <symbol id="icon-message-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
     </symbol>
-    <symbol id="icon-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/>
-      <circle cx="12" cy="12" r="4"/>
-      <circle cx="17" cy="7" r="0.8" fill="currentColor" stroke="none"/>
+    <symbol id="icon-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.4.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .55 3.4 1 1 0 0 1-.25 1z"/>
     </symbol>
-    <symbol id="icon-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3.5 5.5h17v11h-9L6.5 20v-3.5h-3v-11z"/>
+    <symbol id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2"/>
+      <path d="M2.5 6.5l9.5 7 9.5-7"/>
     </symbol>
     <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17"/>
     </symbol>
-    <symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M5 5l14 14M19 5 5 19"/>
     </symbol>
   </svg>
@@ -150,7 +169,7 @@
 
       <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">
         <svg class="icon nav-toggle__icon nav-toggle__icon--open" width="24" height="24"><use href="#icon-menu"></use></svg>
-        <svg class="icon nav-toggle__icon nav-toggle__icon--close" width="24" height="24"><use href="#icon-close"></use></svg>
+        <svg class="icon nav-toggle__icon nav-toggle__icon--close" width="24" height="24"><use href="#icon-x"></use></svg>
       </button>
     </div>
   </header>
@@ -177,53 +196,79 @@
         </h1>
 
         <p class="hero__subhead fade-up">
-          Reliable weekly rental vehicles for Uber, Lyft, DoorDash, Instacart, Amazon Flex and personal use.
+          Reliable weekly rental vehicles designed for rideshare and delivery drivers. Simple approvals, dependable vehicles and unlimited miles to keep you earning.
         </p>
-
-        <ul class="hero__features fade-up">
-          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Insurance Included</li>
-          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> No Credit Check</li>
-          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Unlimited Miles</li>
-          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> 21+ to Rent</li>
-        </ul>
-
-        <div class="hero__price fade-up">
-          <span class="hero__price-label">Starting at</span>
-          <span class="hero__price-value">$350<span>/week</span></span>
-        </div>
 
         <div class="hero__actions fade-up">
           <a href="#apply" class="btn btn--primary btn--lg">
             Apply Now
             <svg class="icon"><use href="#icon-arrow-right"></use></svg>
           </a>
-          <a href="#pricing" class="btn btn--outline btn--lg">View Pricing</a>
+          <a href="#how-it-works" class="btn btn--outline btn--lg">See How It Works</a>
+        </div>
+
+        <ul class="hero__features fade-up">
+          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> No Credit Check</li>
+          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Fast Approval</li>
+          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Unlimited Miles</li>
+          <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Maintenance Covered</li>
+        </ul>
+
+        <div class="hero__price fade-up">
+          <span class="hero__price-label">Starting at</span>
+          <span class="hero__price-value">$350<span>/week</span></span>
         </div>
       </div>
     </section>
 
     <!-- ==================== TRUST BAR ==================== -->
-    <section class="trust-bar" aria-label="Why drivers choose Flex Rentals">
-      <div class="container trust-bar__grid">
-        <div class="trust-card fade-up">
-          <div class="trust-card__icon"><svg class="icon"><use href="#icon-shield"></use></svg></div>
-          <h3>Insurance Included</h3>
-          <p>Every vehicle comes fully insured, so you can get on the road with confidence.</p>
-        </div>
-        <div class="trust-card fade-up">
-          <div class="trust-card__icon"><svg class="icon"><use href="#icon-infinity"></use></svg></div>
-          <h3>Unlimited Miles</h3>
-          <p>No mileage caps, no surprise fees. Drive as much as you need to hit your goals.</p>
-        </div>
-        <div class="trust-card fade-up">
-          <div class="trust-card__icon"><svg class="icon"><use href="#icon-no-card"></use></svg></div>
-          <h3>No Credit Check</h3>
-          <p>Your credit history won't hold you back. Approval is based on your ability to drive.</p>
-        </div>
-        <div class="trust-card fade-up">
-          <div class="trust-card__icon"><svg class="icon"><use href="#icon-user"></use></svg></div>
-          <h3>21+ to Rent</h3>
-          <p>Simple age requirement — no complicated eligibility rules to worry about.</p>
+    <section class="trust-bar" id="why-flex" aria-label="Why Drivers Choose Flex Rentals">
+      <div class="container">
+        <p class="eyebrow fade-up">Why Flex Rentals</p>
+        <h2 class="section-title fade-up">Why Drivers Choose Flex Rentals</h2>
+        <p class="section-lead fade-up">We make it easy for rideshare and delivery drivers to get on the road with reliable vehicles, flexible weekly rentals and a simple approval process.</p>
+
+        <div class="trust-bar__grid">
+          <div class="trust-card fade-up">
+            <div class="trust-card__icon"><svg class="icon"><use href="#icon-shield-check"></use></svg></div>
+            <h3>No Credit Check</h3>
+            <p>Get approved without worrying about your credit score.</p>
+          </div>
+          <div class="trust-card fade-up">
+            <div class="trust-card__icon"><svg class="icon"><use href="#icon-zap"></use></svg></div>
+            <h3>Fast Approval</h3>
+            <p>Submit your documents online and receive a quick decision.</p>
+          </div>
+          <div class="trust-card fade-up">
+            <div class="trust-card__icon"><svg class="icon"><use href="#icon-wrench"></use></svg></div>
+            <h3>Maintenance Covered</h3>
+            <p>Routine maintenance is included so you can stay focused on earning.</p>
+          </div>
+          <div class="trust-card fade-up">
+            <div class="trust-card__icon"><svg class="icon"><use href="#icon-car-front"></use></svg></div>
+            <h3>Reliable Vehicles</h3>
+            <p>Clean, dependable vehicles ready for rideshare and delivery work.</p>
+          </div>
+          <div class="trust-card fade-up">
+            <div class="trust-card__icon"><svg class="icon"><use href="#icon-route"></use></svg></div>
+            <h3>Unlimited Miles</h3>
+            <p>Drive as much as needed without worrying about mileage limits.</p>
+          </div>
+          <div class="trust-card fade-up">
+            <div class="trust-card__icon"><svg class="icon"><use href="#icon-calendar-days"></use></svg></div>
+            <h3>Flexible Weekly Rentals</h3>
+            <p>Renew weekly without a long-term commitment.</p>
+          </div>
+          <div class="trust-card fade-up">
+            <div class="trust-card__icon"><svg class="icon"><use href="#icon-badge-dollar-sign"></use></svg></div>
+            <h3>Transparent Pricing</h3>
+            <p>Straightforward weekly pricing with no hidden fees.</p>
+          </div>
+          <div class="trust-card fade-up">
+            <div class="trust-card__icon"><svg class="icon"><use href="#icon-smartphone"></use></svg></div>
+            <h3>Platform Ready</h3>
+            <p>Suitable for Uber, Lyft, DoorDash, Instacart and other approved platforms.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -232,29 +277,37 @@
     <section class="how-it-works" id="how-it-works">
       <div class="container">
         <p class="eyebrow fade-up">How It Works</p>
-        <h2 class="section-title fade-up">Get on the road in 3 easy steps.</h2>
+        <h2 class="section-title fade-up">Getting on the Road Is Easy</h2>
+        <p class="section-lead fade-up how-it-works__lead">Three simple steps from application to driving.</p>
 
         <div class="steps">
           <div class="steps__line" aria-hidden="true"><span class="steps__line-fill"></span></div>
 
           <div class="step fade-up">
-            <div class="step__icon"><svg class="icon"><use href="#icon-document"></use></svg></div>
+            <div class="step__icon"><svg class="icon"><use href="#icon-file-text"></use></svg></div>
             <span class="step__number">1</span>
-            <h3>Apply Online</h3>
-            <p>Fill out our quick application in minutes — no paperwork hassle.</p>
+            <h3>Apply</h3>
+            <p>Complete the online application.</p>
           </div>
           <div class="step fade-up">
-            <div class="step__icon"><svg class="icon"><use href="#icon-upload"></use></svg></div>
+            <div class="step__icon"><svg class="icon"><use href="#icon-upload-cloud"></use></svg></div>
             <span class="step__number">2</span>
-            <h3>Upload Documents</h3>
-            <p>Submit your license, insurance and ID for fast verification.</p>
+            <h3>Get Approved</h3>
+            <p>Upload the required documents and receive a decision.</p>
           </div>
           <div class="step fade-up">
-            <div class="step__icon"><svg class="icon"><use href="#icon-car"></use></svg></div>
+            <div class="step__icon"><svg class="icon"><use href="#icon-car-front"></use></svg></div>
             <span class="step__number">3</span>
-            <h3>Drive Away</h3>
-            <p>Get approved, pick up your vehicle and start earning the same week.</p>
+            <h3>Drive &amp; Earn</h3>
+            <p>Sign the agreement, pick up the vehicle and get on the road.</p>
           </div>
+        </div>
+
+        <div class="how-it-works__cta fade-up">
+          <a href="#apply" class="btn btn--primary btn--lg">
+            Start My Application
+            <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+          </a>
         </div>
       </div>
     </section>
@@ -264,7 +317,7 @@
       <div class="container pricing__grid">
         <div class="pricing__copy fade-up">
           <p class="eyebrow">Weekly Rentals</p>
-          <h2 class="section-title">Simple, transparent pricing.</h2>
+          <h2 class="section-title">Starting at $350/week</h2>
           <p class="section-lead">One flat weekly rate. No hidden fees, no long-term contracts, no surprises — just everything you need to keep driving and earning.</p>
           <a href="#apply" class="btn btn--primary btn--lg">
             Apply Now
@@ -278,10 +331,11 @@
           <ul class="pricing-card__list">
             <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Insurance Included</li>
             <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Unlimited Miles</li>
-            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Routine Maintenance</li>
-            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Roadside Assistance</li>
+            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Maintenance Covered</li>
+            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Flexible Weekly Rentals</li>
           </ul>
           <a href="#apply" class="btn btn--primary btn--block">Apply Now</a>
+          <p class="pricing-card__disclaimer">Final pricing depends on vehicle type, rental option and availability.</p>
         </div>
       </div>
     </section>
@@ -345,71 +399,292 @@
 
     <!-- ==================== REQUIREMENTS ==================== -->
     <section class="requirements" id="requirements">
-      <div class="container requirements__grid">
-        <div class="requirement-card fade-up">
-          <div class="requirement-card__icon"><svg class="icon"><use href="#icon-user"></use></svg></div>
-          <h3>21+ Age</h3>
-          <p>Drivers must be at least 21 years old to qualify for a rental.</p>
-        </div>
-        <div class="requirement-card fade-up">
-          <div class="requirement-card__icon"><svg class="icon"><use href="#icon-id-card"></use></svg></div>
-          <h3>Valid Driver's License</h3>
-          <p>A current, valid driver's license is required at the time of application.</p>
-        </div>
-        <div class="requirement-card fade-up">
-          <div class="requirement-card__icon"><svg class="icon"><use href="#icon-shield"></use></svg></div>
-          <h3>Insurance Coverage</h3>
-          <p>Vehicles are rented with insurance included — no separate policy needed.</p>
-        </div>
-        <div class="requirement-card fade-up">
-          <div class="requirement-card__icon"><svg class="icon"><use href="#icon-cash"></use></svg></div>
-          <h3>Weekly Payment</h3>
-          <p>A simple weekly rental payment keeps you on the road with no long-term contract.</p>
+      <div class="container">
+        <p class="eyebrow fade-up">Rental Requirements</p>
+        <h2 class="section-title fade-up">What You'll Need to Apply</h2>
+
+        <div class="requirements__grid">
+          <div class="requirement-card fade-up">
+            <div class="requirement-card__icon"><svg class="icon"><use href="#icon-user"></use></svg></div>
+            <h3>21+ Years Old</h3>
+            <p>Applicants must be at least 21 years old to qualify for a rental.</p>
+          </div>
+          <div class="requirement-card fade-up">
+            <div class="requirement-card__icon"><svg class="icon"><use href="#icon-id-card"></use></svg></div>
+            <h3>License — Front</h3>
+            <p>Upload a clear image of the front of your driver's license.</p>
+          </div>
+          <div class="requirement-card fade-up">
+            <div class="requirement-card__icon"><svg class="icon"><use href="#icon-id-card"></use></svg></div>
+            <h3>License — Back</h3>
+            <p>Upload a clear image of the back of your driver's license.</p>
+          </div>
+          <div class="requirement-card fade-up">
+            <div class="requirement-card__icon"><svg class="icon"><use href="#icon-image"></use></svg></div>
+            <h3>Active Platform Screenshot</h3>
+            <p>Upload a screenshot of an active rideshare or delivery platform account.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ==================== APPLICATION SECTION ==================== -->
-    <!--
-      PLACEHOLDER: This section is a static stand-in for the application form.
-      It will be replaced with an embedded GoHighLevel form. Keep the wrapper
-      #apply and .apply-card structure so styling stays consistent when the
-      GHL embed (iframe/snippet) is dropped in.
+    <!-- ==================== REVIEWS / TESTIMONIALS ====================
+      NOTE: Cards below are clearly-labeled placeholders per the Phase 1 brief
+      ("do not publish fabricated reviews as real customer testimonials").
+      Swap in genuine Google reviews or verified customer testimonials before
+      launch — keep the same .review-card markup so the carousel styling and
+      swipe/scroll behavior keep working.
+    -->
+    <section class="reviews" id="reviews">
+      <div class="container">
+        <p class="eyebrow fade-up">Reviews</p>
+        <h2 class="section-title fade-up">What Drivers Are Saying</h2>
+        <p class="section-lead fade-up">Real feedback from Flex Rentals drivers, added as reviews come in.</p>
+      </div>
+
+      <div class="reviews__carousel fade-up">
+        <button type="button" class="reviews__nav reviews__nav--prev" id="reviewsPrev" aria-label="Previous review">
+          <svg class="icon"><use href="#icon-chevron-left"></use></svg>
+        </button>
+
+        <div class="reviews__track" id="reviewsTrack">
+          <article class="review-card">
+            <span class="review-card__badge">Sample placeholder</span>
+            <div class="review-card__stars" aria-hidden="true">
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+            </div>
+            <p class="review-card__quote">This card is a placeholder for a real rideshare driver's review of their Flex Rentals experience. It will be replaced with a genuine, verified testimonial or Google review before this goes live.</p>
+            <p class="review-card__author">Placeholder — Rideshare Driver</p>
+          </article>
+
+          <article class="review-card">
+            <span class="review-card__badge">Sample placeholder</span>
+            <div class="review-card__stars" aria-hidden="true">
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+            </div>
+            <p class="review-card__quote">This card is a placeholder for a real delivery driver's review of their Flex Rentals experience. It will be replaced with a genuine, verified testimonial or Google review before this goes live.</p>
+            <p class="review-card__author">Placeholder — Delivery Driver</p>
+          </article>
+
+          <article class="review-card">
+            <span class="review-card__badge">Sample placeholder</span>
+            <div class="review-card__stars" aria-hidden="true">
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+            </div>
+            <p class="review-card__quote">This card is a placeholder for feedback about how fast and easy the approval process was. It will be replaced with a genuine, verified testimonial or Google review before this goes live.</p>
+            <p class="review-card__author">Placeholder — Approved Applicant</p>
+          </article>
+
+          <article class="review-card">
+            <span class="review-card__badge">Sample placeholder</span>
+            <div class="review-card__stars" aria-hidden="true">
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+              <svg class="icon icon--sm"><use href="#icon-star"></use></svg>
+            </div>
+            <p class="review-card__quote">This card is a placeholder for feedback about vehicle reliability and maintenance support. It will be replaced with a genuine, verified testimonial or Google review before this goes live.</p>
+            <p class="review-card__author">Placeholder — Active Renter</p>
+          </article>
+        </div>
+
+        <button type="button" class="reviews__nav reviews__nav--next" id="reviewsNext" aria-label="Next review">
+          <svg class="icon"><use href="#icon-chevron-right"></use></svg>
+        </button>
+      </div>
+
+      <div class="reviews__dots" id="reviewsDots" role="tablist" aria-label="Review slides"></div>
+    </section>
+
+    <!-- ==================== FAQ ==================== -->
+    <section class="faq" id="faq">
+      <div class="container">
+        <p class="eyebrow fade-up">FAQ</p>
+        <h2 class="section-title fade-up">Frequently asked questions.</h2>
+
+        <div class="accordion" id="faqAccordion">
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>How do I qualify to rent a vehicle?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron-down"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>You must be at least 21 years old, have a valid driver's license, and upload the required documents. Rideshare or delivery applicants must also provide a screenshot of an active platform account.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>What are your rental rates?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron-down"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>Weekly rentals start at $350 per week. Final pricing depends on the vehicle, rental option and availability. Pricing is transparent with no hidden fees.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Is a security deposit required?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron-down"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>We offer both deposit and no-deposit rental options. Choosing a security deposit may qualify you for a lower weekly rate, while no-deposit options provide added flexibility. The best option depends on the vehicle and current availability.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>What happens after I submit my application?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron-down"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>We review your information and contact you to schedule a convenient pickup time. At pickup, you meet a Flex Rentals representative, review and sign the rental agreement, complete any remaining paperwork and receive the vehicle.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Can I use the vehicle for Uber, Lyft, DoorDash or other delivery apps?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron-down"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>Yes. Vehicles are intended for approved rideshare and delivery platforms, including Uber, Lyft, DoorDash, Instacart, Amazon Flex and others.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>How soon can I get a vehicle?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron-down"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>Availability varies based on demand. Applications are reviewed quickly. If a vehicle is not immediately available, qualified applicants are contacted when a suitable vehicle becomes available.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>How does vehicle maintenance work?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron-down"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>Flex Rentals coordinates scheduled maintenance so renters can stay focused on driving. Service is required approximately every 3,000 miles or every 28 days, whichever comes first.</p>
+            </div>
+          </div>
+          <div class="accordion__item fade-up">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Can I take the vehicle out of state?</span>
+              <svg class="icon accordion__chevron"><use href="#icon-chevron-down"></use></svg>
+            </button>
+            <div class="accordion__panel">
+              <p>To help keep vehicles reliable and available, Flex Rentals vehicles must remain within Georgia. This supports insurance compliance, routine maintenance scheduling, and prompt roadside assistance and support. Special travel requests must be discussed with the team before the rental.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== APPLICATION SECTION ====================
+      Five-step application with progress indicator, per-step validation,
+      and file uploads (license front/back, active platform screenshot).
+
+      GHL INTEGRATION POINT — see the fully documented note above
+      submitApplicationToGHL() in js/script.js. In short: this form
+      currently cannot reach a real backend (no GHL credentials/embed code
+      were available at build time). Wire it up one of two ways:
+        1. Recommended: delete this <form> and drop a native GHL form
+           embed in its place (same #apply wrapper), OR
+        2. Keep this UI and point submitApplicationToGHL() at your GHL
+           inbound webhook / API, sending the fields named below.
     -->
     <section class="apply" id="apply">
-      <div class="container apply__grid">
-        <div class="apply__copy fade-up">
-          <h2 class="section-title">Ready to start earning?</h2>
-          <p class="section-lead">Apply today and we'll get you on the road fast. Vehicle availability changes weekly — don't wait.</p>
-          <ul class="apply__points">
-            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Quick online application</li>
-            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Fast approval</li>
-            <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Limited availability — apply now</li>
-          </ul>
+      <div class="container">
+        <div class="apply__intro fade-up" id="applyIntro">
+          <p class="eyebrow">Apply Now</p>
+          <h2 class="section-title">Start Your Application</h2>
+          <p class="section-lead">Five quick steps to get your application in front of our team.</p>
+        </div>
+
+        <div class="apply-progress fade-up" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1" aria-label="Application progress" id="applyProgress">
+          <ol class="apply-progress__list">
+            <li class="apply-progress__item is-active" data-step="1">
+              <span class="apply-progress__dot">1</span>
+              <span class="apply-progress__label">Basic Info</span>
+            </li>
+            <li class="apply-progress__item" data-step="2">
+              <span class="apply-progress__dot">2</span>
+              <span class="apply-progress__label">Driver Info</span>
+            </li>
+            <li class="apply-progress__item" data-step="3">
+              <span class="apply-progress__dot">3</span>
+              <span class="apply-progress__label">Platforms</span>
+            </li>
+            <li class="apply-progress__item" data-step="4">
+              <span class="apply-progress__dot">4</span>
+              <span class="apply-progress__label">Rental Option</span>
+            </li>
+            <li class="apply-progress__item" data-step="5">
+              <span class="apply-progress__dot">5</span>
+              <span class="apply-progress__label">Review</span>
+            </li>
+          </ol>
+          <div class="apply-progress__bar"><span class="apply-progress__bar-fill" id="applyProgressFill"></span></div>
         </div>
 
         <form class="apply-card fade-up" id="applyForm" novalidate>
-          <div class="apply-card__row">
-            <div class="form-field">
-              <label for="fullName">Full Name</label>
-              <input type="text" id="fullName" name="fullName" autocomplete="name" required />
+
+          <!-- STEP 1 — Basic Information -->
+          <fieldset class="apply-step is-active" data-step="1">
+            <legend class="apply-step__title">Basic Information</legend>
+            <div class="apply-card__row">
+              <div class="form-field">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" autocomplete="given-name" required />
+                <span class="form-field__error">Enter your first name.</span>
+              </div>
+              <div class="form-field">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" autocomplete="family-name" required />
+                <span class="form-field__error">Enter your last name.</span>
+              </div>
             </div>
-            <div class="form-field">
-              <label for="phone">Phone Number</label>
-              <input type="tel" id="phone" name="phone" autocomplete="tel" required />
+            <div class="apply-card__row">
+              <div class="form-field">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" autocomplete="tel" required />
+                <span class="form-field__error">Enter a valid phone number.</span>
+              </div>
+              <div class="form-field">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" autocomplete="email" required />
+                <span class="form-field__error">Enter a valid email address.</span>
+              </div>
             </div>
-          </div>
-          <div class="apply-card__row">
-            <div class="form-field">
-              <label for="email">Email Address</label>
-              <input type="email" id="email" name="email" autocomplete="email" required />
+          </fieldset>
+
+          <!-- STEP 2 — Driver Information -->
+          <fieldset class="apply-step" data-step="2">
+            <legend class="apply-step__title">Driver Information</legend>
+            <div class="apply-card__row">
+              <div class="form-field">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required />
+                <span class="form-field__error">Enter your date of birth.</span>
+              </div>
+              <div class="form-field">
+                <label for="licenseNumber">Driver's License Number</label>
+                <input type="text" id="licenseNumber" name="licenseNumber" required />
+                <span class="form-field__error">Enter your license number.</span>
+              </div>
             </div>
-            <div class="form-field">
-              <label for="city">City</label>
-              <input type="text" id="city" name="city" autocomplete="address-level2" required />
-            </div>
-          </div>
-          <div class="apply-card__row">
             <div class="form-field">
               <label for="licenseState">Driver's License State</label>
               <select id="licenseState" name="licenseState" required>
@@ -422,102 +697,130 @@
                 <option value="NC">North Carolina</option>
                 <option value="other">Other</option>
               </select>
+              <span class="form-field__error">Select your license state.</span>
             </div>
-            <div class="form-field">
-              <label for="platform">Which platform will you drive for?</label>
-              <select id="platform" name="platform" required>
-                <option value="" disabled selected>Select platform</option>
-                <option value="uber">Uber</option>
-                <option value="lyft">Lyft</option>
-                <option value="doordash">DoorDash</option>
-                <option value="instacart">Instacart</option>
-                <option value="amazon-flex">Amazon Flex</option>
-                <option value="personal">Personal Use</option>
-                <option value="multiple">Multiple Platforms</option>
-              </select>
+            <div class="apply-card__row">
+              <div class="form-field form-field--upload">
+                <label for="licenseFront">License — Front</label>
+                <label class="upload-dropzone" for="licenseFront">
+                  <svg class="icon"><use href="#icon-upload-cloud"></use></svg>
+                  <span class="upload-dropzone__text">Tap to upload photo</span>
+                  <span class="upload-dropzone__filename"></span>
+                </label>
+                <input type="file" id="licenseFront" name="licenseFront" accept="image/*,.pdf" class="upload-input" required />
+                <span class="form-field__error">Upload the front of your license.</span>
+              </div>
+              <div class="form-field form-field--upload">
+                <label for="licenseBack">License — Back</label>
+                <label class="upload-dropzone" for="licenseBack">
+                  <svg class="icon"><use href="#icon-upload-cloud"></use></svg>
+                  <span class="upload-dropzone__text">Tap to upload photo</span>
+                  <span class="upload-dropzone__filename"></span>
+                </label>
+                <input type="file" id="licenseBack" name="licenseBack" accept="image/*,.pdf" class="upload-input" required />
+                <span class="form-field__error">Upload the back of your license.</span>
+              </div>
             </div>
-          </div>
+          </fieldset>
 
-          <button type="submit" class="btn btn--primary btn--block btn--lg">
-            Apply Now
-            <svg class="icon"><use href="#icon-arrow-right"></use></svg>
-          </button>
+          <!-- STEP 3 — Gig Platforms -->
+          <fieldset class="apply-step" data-step="3">
+            <legend class="apply-step__title">Gig Platforms</legend>
+            <div class="form-field">
+              <span class="form-field__group-label">Which platform(s) will you drive for? Select all that apply.</span>
+              <div class="platform-grid">
+                <label class="platform-chip"><input type="checkbox" name="platforms" value="Uber" /><span>Uber</span></label>
+                <label class="platform-chip"><input type="checkbox" name="platforms" value="Lyft" /><span>Lyft</span></label>
+                <label class="platform-chip"><input type="checkbox" name="platforms" value="DoorDash" /><span>DoorDash</span></label>
+                <label class="platform-chip"><input type="checkbox" name="platforms" value="Instacart" /><span>Instacart</span></label>
+                <label class="platform-chip"><input type="checkbox" name="platforms" value="Amazon Flex" /><span>Amazon Flex</span></label>
+                <label class="platform-chip"><input type="checkbox" name="platforms" value="Spark" /><span>Spark</span></label>
+                <label class="platform-chip"><input type="checkbox" name="platforms" value="Other" /><span>Other</span></label>
+              </div>
+              <span class="form-field__error form-field__error--group">Select at least one platform.</span>
+            </div>
+            <div class="form-field form-field--upload">
+              <label for="platformScreenshot">Active Platform Screenshot</label>
+              <label class="upload-dropzone" for="platformScreenshot">
+                <svg class="icon"><use href="#icon-image"></use></svg>
+                <span class="upload-dropzone__text">Tap to upload screenshot</span>
+                <span class="upload-dropzone__filename"></span>
+              </label>
+              <input type="file" id="platformScreenshot" name="platformScreenshot" accept="image/*" class="upload-input" required />
+              <span class="form-field__error">Upload a screenshot of your active account.</span>
+            </div>
+          </fieldset>
+
+          <!-- STEP 4 — Rental Preference -->
+          <fieldset class="apply-step" data-step="4">
+            <legend class="apply-step__title">Rental Preference</legend>
+            <div class="rental-options">
+              <label class="rental-option-card">
+                <input type="radio" name="rentalOption" value="Deposit Option" required />
+                <span class="rental-option-card__badge">Recommended</span>
+                <h3>Deposit Option</h3>
+                <p class="rental-option-card__headline">Save $25 per week</p>
+                <ul>
+                  <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Lower weekly rate</li>
+                  <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Priority vehicle consideration</li>
+                  <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Refundable deposit, subject to agreement</li>
+                  <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Attractive for longer rentals</li>
+                </ul>
+              </label>
+              <label class="rental-option-card">
+                <input type="radio" name="rentalOption" value="No Deposit Option" required />
+                <h3>No Deposit Option</h3>
+                <p class="rental-option-card__headline">Get on the road with less money upfront</p>
+                <ul>
+                  <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> No security deposit</li>
+                  <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Lower upfront cost</li>
+                  <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Same dependable vehicles</li>
+                  <li><svg class="icon icon--sm"><use href="#icon-check"></use></svg> Flexible rental option</li>
+                </ul>
+              </label>
+            </div>
+            <span class="form-field__error form-field__error--group">Choose a rental option to continue.</span>
+            <p class="rental-options__note">Choosing an option does not lock you in — the Flex Rentals team will review the best available rental option with you before pickup.</p>
+
+            <div class="form-field">
+              <label for="notes">Notes About Your Rental Needs <span class="form-field__optional">(optional)</span></label>
+              <textarea id="notes" name="notes" rows="3"></textarea>
+            </div>
+          </fieldset>
+
+          <!-- STEP 5 — Review & Submit -->
+          <fieldset class="apply-step" data-step="5">
+            <legend class="apply-step__title">Review &amp; Submit</legend>
+            <div class="apply-review" id="applyReview"></div>
+            <label class="apply-consent">
+              <input type="checkbox" id="consent" name="consent" required />
+              <span>I confirm the information provided is accurate and I consent to Flex Rentals contacting me about my application.</span>
+            </label>
+            <span class="form-field__error">You must confirm before submitting.</span>
+          </fieldset>
+
+          <div class="apply-nav">
+            <button type="button" class="btn btn--outline" id="applyBack" hidden>
+              <svg class="icon"><use href="#icon-arrow-left"></use></svg>
+              Back
+            </button>
+            <button type="button" class="btn btn--primary apply-nav__next" id="applyNext">
+              Continue
+              <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+            </button>
+            <button type="submit" class="btn btn--primary apply-nav__submit" id="applySubmit" hidden>
+              Submit Application
+              <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+            </button>
+          </div>
 
           <p class="apply-card__status" id="applyFormStatus" role="status" aria-live="polite"></p>
         </form>
-      </div>
-    </section>
 
-    <!-- ==================== FAQ ==================== -->
-    <section class="faq" id="faq">
-      <div class="container">
-        <p class="eyebrow fade-up">FAQ</p>
-        <h2 class="section-title fade-up">Frequently asked questions.</h2>
-
-        <div class="accordion" id="faqAccordion">
-          <div class="accordion__item fade-up">
-            <button class="accordion__trigger" aria-expanded="false">
-              <span>Can I drive Uber?</span>
-              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
-            </button>
-            <div class="accordion__panel">
-              <p>Yes. Every vehicle in our fleet is eligible for Uber, so you can start driving as soon as you're approved and activated on the platform.</p>
-            </div>
-          </div>
-          <div class="accordion__item fade-up">
-            <button class="accordion__trigger" aria-expanded="false">
-              <span>Can I drive Lyft?</span>
-              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
-            </button>
-            <div class="accordion__panel">
-              <p>Absolutely. Our vehicles also meet Lyft's requirements, so you're free to drive for Lyft, Uber, or both at the same time.</p>
-            </div>
-          </div>
-          <div class="accordion__item fade-up">
-            <button class="accordion__trigger" aria-expanded="false">
-              <span>How long is approval?</span>
-              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
-            </button>
-            <div class="accordion__panel">
-              <p>Most applications are reviewed quickly once your documents are submitted. Many drivers are approved and on the road within the same week.</p>
-            </div>
-          </div>
-          <div class="accordion__item fade-up">
-            <button class="accordion__trigger" aria-expanded="false">
-              <span>What documents are required?</span>
-              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
-            </button>
-            <div class="accordion__panel">
-              <p>You'll need a valid driver's license, proof of insurance eligibility, and — if applicable — your active rideshare or delivery platform account details.</p>
-            </div>
-          </div>
-          <div class="accordion__item fade-up">
-            <button class="accordion__trigger" aria-expanded="false">
-              <span>Is insurance included?</span>
-              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
-            </button>
-            <div class="accordion__panel">
-              <p>Yes. Every weekly rental includes insurance coverage, so there's no need to source a separate policy before you can drive.</p>
-            </div>
-          </div>
-          <div class="accordion__item fade-up">
-            <button class="accordion__trigger" aria-expanded="false">
-              <span>Do you require a deposit?</span>
-              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
-            </button>
-            <div class="accordion__panel">
-              <p>Deposit requirements are confirmed during the application process and depend on the vehicle and rental terms. Our team will walk you through the exact amount before pickup.</p>
-            </div>
-          </div>
-          <div class="accordion__item fade-up">
-            <button class="accordion__trigger" aria-expanded="false">
-              <span>What payment methods do you accept?</span>
-              <svg class="icon accordion__chevron"><use href="#icon-chevron"></use></svg>
-            </button>
-            <div class="accordion__panel">
-              <p>We accept major debit cards and standard electronic payment methods for weekly rental payments. Our team can confirm all accepted options during onboarding.</p>
-            </div>
-          </div>
+        <div class="apply-success" id="applySuccess" hidden tabindex="-1">
+          <svg class="icon apply-success__icon"><use href="#icon-check"></use></svg>
+          <h3>Application Received</h3>
+          <p>Thanks for applying to Flex Rentals. Our team will review your information and reach out to schedule your pickup.</p>
         </div>
       </div>
     </section>
@@ -533,7 +836,7 @@
         </a>
         <p class="site-footer__tagline">Rent. Drive. Earn.</p>
         <p class="site-footer__location">
-          <svg class="icon icon--sm"><use href="#icon-location"></use></svg>
+          <svg class="icon icon--sm"><use href="#icon-map-pin"></use></svg>
           Atlanta, Georgia
         </p>
       </div>
@@ -561,16 +864,16 @@
         <h4>Contact</h4>
         <ul class="site-footer__contact">
           <!-- TODO: add real business phone/email, e.g.:
-          <li><a href="tel:+14045550100"><svg class="icon icon--sm"><use href="#icon-headset"></use></svg> (404) 555-0100</a></li>
-          <li><a href="mailto:info@flexrentalsllc.com"><svg class="icon icon--sm"><use href="#icon-message"></use></svg> info@flexrentalsllc.com</a></li>
+          <li><a href="tel:+14045550100"><svg class="icon icon--sm"><use href="#icon-phone"></use></svg> (404) 555-0100</a></li>
+          <li><a href="mailto:info@flexrentalsllc.com"><svg class="icon icon--sm"><use href="#icon-mail"></use></svg> info@flexrentalsllc.com</a></li>
           -->
         </ul>
         <div class="social-icons">
           <!-- Facebook/Instagram icons removed until real profile URLs are ready.
-               Re-add here once accounts exist: reuse #icon-facebook / #icon-instagram
-               from the sprite at the top of <body>. -->
+               Re-add once accounts exist as Lucide-style icons matching the
+               sprite pattern at the top of <body> (facebook / instagram). -->
           <a href="#apply" aria-label="Message Flex Rentals" class="social-icons__link">
-            <svg class="icon"><use href="#icon-message"></use></svg>
+            <svg class="icon"><use href="#icon-message-circle"></use></svg>
           </a>
         </div>
       </div>
