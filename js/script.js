@@ -141,6 +141,20 @@
   /* ---------------------------------------------------------------- */
   var fadeEls = document.querySelectorAll('.fade-up');
 
+  // Stagger siblings within card/list groups so they cascade in one after
+  // another instead of popping in all at once — same fade, just sequenced.
+  var staggerGroups = document.querySelectorAll(
+    '.hero__inner, .trust-bar__grid, .requirements__grid, .fleet__grid, .steps'
+  );
+  staggerGroups.forEach(function (group) {
+    var items = Array.prototype.filter.call(group.children, function (el) {
+      return el.classList.contains('fade-up');
+    });
+    items.forEach(function (el, i) {
+      el.style.transitionDelay = Math.min(i * 70, 350) + 'ms';
+    });
+  });
+
   if ('IntersectionObserver' in window) {
     var fadeObserver = new IntersectionObserver(
       function (entries) {

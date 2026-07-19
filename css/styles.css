@@ -72,6 +72,7 @@ input, select { font: inherit; color: inherit; }
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
   }
 }
@@ -589,7 +590,9 @@ h1, h2, h3, h4 {
   background: rgba(52, 199, 89, 0.1);
   color: var(--color-accent);
   margin-bottom: var(--space-4);
+  transition: transform var(--transition-fast);
 }
+.trust-card:hover .trust-card__icon { transform: scale(1.08); }
 .trust-card h3 {
   font-size: 1.05rem;
   margin-bottom: var(--space-2);
@@ -859,6 +862,11 @@ h1, h2, h3, h4 {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 16px 32px -22px rgba(0, 0, 0, 0.6);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+.requirement-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(52, 199, 89, 0.35);
 }
 .requirement-card__icon {
   width: 48px;
@@ -869,7 +877,9 @@ h1, h2, h3, h4 {
   border-radius: var(--radius-sm);
   background: rgba(30, 111, 61, 0.25);
   color: var(--color-accent);
+  transition: transform var(--transition-fast);
 }
+.requirement-card:hover .requirement-card__icon { transform: scale(1.08); }
 .requirement-card h3 { font-size: 1rem; margin-bottom: var(--space-1); }
 .requirement-card p { color: var(--color-muted); font-size: 0.88rem; }
 
@@ -1380,7 +1390,9 @@ h1, h2, h3, h4 {
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 12px 26px -20px rgba(0, 0, 0, 0.6);
   overflow: hidden;
+  transition: border-color var(--transition-fast);
 }
+.accordion__item:hover { border-color: rgba(52, 199, 89, 0.3); }
 .accordion__trigger {
   width: 100%;
   display: flex;
