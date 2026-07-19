@@ -1,0 +1,23 @@
+# Config for the standalone Cloudflare Worker (worker/index.js) — the
+# application-submit API only. Not used if you deploy the whole site to
+# Cloudflare Pages instead (that path uses functions/api/submit-application.js
+# and doesn't need Wrangler/this file at all).
+name = "flex-rentals-api"
+main = "worker/index.js"
+compatibility_date = "2024-01-01"
+
+# account_id is not committed here — set it interactively the first time you
+# run `wrangler deploy` (it will prompt you to log in and pick the account),
+# or add it yourself: account_id = "your-cloudflare-account-id"
+
+# GHL_LOCATION_ID, GHL_PRIVATE_INTEGRATION_TOKEN, GHL_PIPELINE_ID, and
+# GHL_APPLICATION_SUBMITTED_STAGE_ID are intentionally NOT set in this file
+# — set each one as a secret instead, so it never lives in source control:
+#
+#   wrangler secret put GHL_LOCATION_ID
+#   wrangler secret put GHL_PRIVATE_INTEGRATION_TOKEN
+#   wrangler secret put GHL_PIPELINE_ID
+#   wrangler secret put GHL_APPLICATION_SUBMITTED_STAGE_ID
+#
+# Each command prompts you to paste the value — it's stored encrypted on
+# Cloudflare's side, never written to this repo.
