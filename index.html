@@ -143,6 +143,18 @@
     <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M5 5l14 14M19 5 5 19"/>
     </symbol>
+    <symbol id="icon-facebook" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 8.5h2V5h-2.5A3.5 3.5 0 0 0 11 8.5V11H9v3.5h2V21h3.5v-6.5h2.4l.6-3.5h-3V9c0-.5.3-.5.5-.5z"/>
+    </symbol>
+    <symbol id="icon-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17" cy="7" r="0.8" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v5l3.5 2"/>
+    </symbol>
   </svg>
 
   <!-- Skip link for accessibility -->
@@ -644,6 +656,11 @@
                 <span class="form-field__error">Enter a valid email address.</span>
               </div>
             </div>
+
+            <label class="apply-consent">
+              <input type="checkbox" id="smsConsent" name="smsConsent" />
+              <span>I agree to receive SMS text messages from Flex Rentals about my application, approval, pickup scheduling, payment and maintenance reminders, and rental updates. Message frequency varies. Message and data rates may apply. Reply STOP to opt out, HELP for help. Consent is not a condition of purchase. See our <a href="sms-terms.html">SMS Terms</a> and <a href="privacy-policy.html">Privacy Policy</a>.</span>
+            </label>
           </fieldset>
 
           <!-- STEP 2 — Driver Information -->
@@ -811,9 +828,10 @@
           <img class="logo__img" src="assets/icons/flex-rentals-logo-dark-bg.png" alt="Flex Rentals" width="1040" height="424" />
         </a>
         <p class="site-footer__tagline">Rent. Drive. Earn.</p>
+        <p class="site-footer__desc">Reliable weekly rental vehicles for rideshare, delivery and qualified personal-use drivers.</p>
         <p class="site-footer__location">
           <svg class="icon icon--sm"><use href="#icon-map-pin"></use></svg>
-          Atlanta, Georgia
+          56 Peachtree Valley Rd NE, Atlanta, GA 30309
         </p>
       </div>
 
@@ -822,8 +840,8 @@
         <ul>
           <li><a href="#home">Home</a></li>
           <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#faq">FAQ</a></li>
           <li><a href="#requirements">Requirements</a></li>
+          <li><a href="#faq">FAQ</a></li>
           <li><a href="#apply">Apply</a></li>
         </ul>
       </nav>
@@ -832,31 +850,32 @@
         <h4>Legal</h4>
         <ul>
           <li><a href="privacy-policy.html">Privacy Policy</a></li>
-          <li><a href="rental-terms.html">Rental Terms</a></li>
+          <li><a href="terms-conditions.html">Terms &amp; Conditions</a></li>
+          <li><a href="sms-terms.html">SMS Terms</a></li>
+          <li><a href="sms-privacy.html">SMS Privacy</a></li>
         </ul>
       </nav>
 
       <div class="site-footer__social">
         <h4>Contact</h4>
         <ul class="site-footer__contact">
-          <!-- TODO: add real business phone/email, e.g.:
-          <li><a href="tel:+14045550100"><svg class="icon icon--sm"><use href="#icon-phone"></use></svg> (404) 555-0100</a></li>
-          <li><a href="mailto:info@flexrentalsllc.com"><svg class="icon icon--sm"><use href="#icon-mail"></use></svg> info@flexrentalsllc.com</a></li>
-          -->
+          <li><a href="tel:+14047386601"><svg class="icon icon--sm"><use href="#icon-phone"></use></svg> (404) 738-6601</a></li>
+          <li><a href="mailto:info@joinflexrentals.com"><svg class="icon icon--sm"><use href="#icon-mail"></use></svg> info@joinflexrentals.com</a></li>
+          <li><a href="contact.html">Contact page</a></li>
         </ul>
         <div class="social-icons">
-          <!-- Facebook/Instagram icons removed until real profile URLs are ready.
-               Re-add once accounts exist as Lucide-style icons matching the
-               sprite pattern at the top of <body> (facebook / instagram). -->
-          <a href="#apply" aria-label="Message Flex Rentals" class="social-icons__link">
-            <svg class="icon"><use href="#icon-message-circle"></use></svg>
+          <a href="https://www.facebook.com/share/1He6o5SKWx/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Flex Rentals on Facebook" class="social-icons__link">
+            <svg class="icon"><use href="#icon-facebook"></use></svg>
+          </a>
+          <a href="https://www.instagram.com/flexrentals_?igsh=MTdleWJ5eWhzYmJhYQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" aria-label="Flex Rentals on Instagram" class="social-icons__link">
+            <svg class="icon"><use href="#icon-instagram"></use></svg>
           </a>
         </div>
       </div>
     </div>
 
     <div class="site-footer__bottom">
-      <p>&copy; <span id="footerYear">2026</span> Flex Rentals LLC. All rights reserved.</p>
+      <p>&copy; <span id="footerYear">2026</span> Flex Rentals LLC. All Rights Reserved.</p>
     </div>
   </footer>
 

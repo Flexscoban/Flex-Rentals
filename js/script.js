@@ -353,10 +353,13 @@
       var rentalOptionEl = form.querySelector('input[name="rentalOption"]:checked');
       var rentalOption = rentalOptionEl ? rentalOptionEl.value : '—';
 
+      var smsConsentEl = document.getElementById('smsConsent');
+
       var rows = [
         ['Name', (fieldValue('firstName') + ' ' + fieldValue('lastName')).trim() || '—'],
         ['Phone', fieldValue('phone') || '—'],
         ['Email', fieldValue('email') || '—'],
+        ['SMS Updates', smsConsentEl && smsConsentEl.checked ? 'Opted in' : 'Not opted in'],
         ['Date of Birth', fieldValue('dob') || '—'],
         ['License Number', fieldValue('licenseNumber') || '—'],
         ['License State', fieldLabelForSelect('licenseState') || '—'],
@@ -391,6 +394,7 @@
         lastName: fieldValue('lastName'),
         phone: fieldValue('phone'),
         email: fieldValue('email'),
+        smsConsent: !!document.getElementById('smsConsent').checked,
         dob: fieldValue('dob'),
         licenseNumber: fieldValue('licenseNumber'),
         licenseState: fieldValue('licenseState'),
@@ -482,6 +486,71 @@
     // });
 
     console.log('[Flex Rentals] Application payload ready for GHL integration:', payload);
+    return Promise.resolve();
+  }
+
+  /* ==================================================================
+     CONTACT PAGE FORM — single-step, same GHL integration pattern as
+     the application form. See submitApplicationToGHL() above for the
+     full integration write-up; submitContactToGHL() below is the
+     equivalent hook for contact.html.
+     ================================================================== */
+  (function () {
+    var form = document.getElementById('contactForm');
+    if (!form) return;
+
+    var statusEl = document.getElementById('contactFormStatus');
+
+    function fieldValue(id) {
+      var el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      var valid = true;
+      form.querySelectorAll('input[required], textarea[required]').forEach(function (field) {
+        var wrapper = field.closest('.form-field');
+        var ok = field.checkValidity();
+        if (wrapper) wrapper.classList.toggle('has-error', !ok);
+        if (!ok) valid = false;
+      });
+      if (!valid) return;
+
+      var payload = {
+        name: fieldValue('contactName'),
+        phone: fieldValue('contactPhone'),
+        email: fieldValue('contactEmail'),
+        message: fieldValue('contactMessage'),
+        smsConsent: !!document.getElementById('contactSmsConsent').checked
+      };
+
+      submitContactToGHL(payload)
+        .then(function () {
+          if (statusEl) {
+            statusEl.style.color = 'var(--color-accent)';
+            statusEl.textContent = "Thanks! We've received your message and will get back to you shortly.";
+          }
+          form.reset();
+          form.querySelectorAll('.form-field.has-error').forEach(function (f) {
+            f.classList.remove('has-error');
+          });
+        })
+        .catch(function (err) {
+          if (statusEl) {
+            statusEl.style.color = '#ff8a8a';
+            statusEl.textContent = 'Something went wrong sending your message. Please call or text us instead.';
+          }
+          console.error('Flex Rentals contact form submission failed:', err);
+        });
+    });
+  })();
+
+  // TODO: replace with a real GHL webhook/API call — same pattern as
+  // submitApplicationToGHL() above.
+  function submitContactToGHL(payload) {
+    console.log('[Flex Rentals] Contact payload ready for GHL integration:', payload);
     return Promise.resolve();
   }
 
