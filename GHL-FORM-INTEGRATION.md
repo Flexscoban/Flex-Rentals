@@ -103,12 +103,82 @@ named e.g. **"Flex Rentals Pipeline"**, with a stage named e.g.
 
 ## 3. Get your four credential values
 
-| Env var | Where to find it |
-|---|---|
-| `GHL_LOCATION_ID` | Settings → Business Profile (also called "Location ID" — it's in the URL of your sub-account, e.g. `.../location/XXXXXXXXXXXXXXXXXXXX/...`) |
-| `GHL_PRIVATE_INTEGRATION_TOKEN` | Settings → Private Integrations → Create Private Integration. Grant it: `contacts.write`, `contacts.readonly`, `opportunities.write`, `opportunities.readonly`, and `medias.write` (or the closest "Media Library" write scope your GHL version shows). Copy the token — GHL only shows it once. |
-| `GHL_PIPELINE_ID` | Open the pipeline in GHL; the ID is in the URL, or call `GET /opportunities/pipelines?locationId={locationId}` and read `pipelines[].id`. |
-| `GHL_APPLICATION_SUBMITTED_STAGE_ID` | Same pipelines response — each pipeline includes a `stages[]` array; find the "Application Submitted" stage and copy its `id`. |
+**First:** make sure you're logged into the Flex Rentals **sub-account**
+(what GHL calls a "Location"), not the top-level **Agency** view — Private
+Integrations, Pipelines, and Location IDs are all per-location. If your
+GHL account manages multiple businesses, use the location switcher to pick
+Flex Rentals before doing anything below.
+
+### `GHL_LOCATION_ID`
+
+Two ways to get it, either works:
+- **From the URL:** with the Flex Rentals sub-account open, look at your
+  browser's address bar. It looks like
+  `https://app.gohighlevel.com/v2/location/ve9EPM428h8vShlRW1KT/...` — the
+  segment right after `/location/` is your Location ID.
+- **From Settings:** Settings → Business Profile (sometimes labeled
+  "Company" depending on your GHL version) — some versions list "Location
+  ID" directly on that page.
+
+### `GHL_PRIVATE_INTEGRATION_TOKEN`
+
+1. Settings → **Private Integrations** (if you don't see it in the left
+   nav, use the settings search bar and type "Private Integration" — GHL
+   moves this around between versions).
+2. Click **+ New Private Integration** (or **Create New Integration**).
+3. Name it something identifiable, e.g. `Flex Rentals Website Form`.
+4. Grant these scopes: `contacts.write`, `contacts.readonly`,
+   `opportunities.write`, `opportunities.readonly`, and a Media
+   Library / `medias.write` scope (label varies by version — grant
+   whichever one mentions media/file uploads).
+5. Click **Create** / **Generate**.
+6. **Copy the token immediately.** GHL shows it exactly once — if you
+   navigate away before copying it, you can't retrieve it again; you'd
+   have to delete that integration and create a new one.
+
+### `GHL_PIPELINE_ID` and `GHL_APPLICATION_SUBMITTED_STAGE_ID`
+
+The dashboard doesn't display these as plain copyable text, so the
+reliable way to get both at once is one API call using the token you just
+created. Run this yourself (in a terminal, or a tool like Postman/Insomnia
+if you prefer a GUI) — don't paste your token into a chat with anyone,
+including here:
+
+```bash
+curl -s "https://services.leadconnectorhq.com/opportunities/pipelines?locationId=YOUR_LOCATION_ID" \
+  -H "Authorization: Bearer YOUR_PRIVATE_INTEGRATION_TOKEN" \
+  -H "Version: 2021-07-28" | python3 -m json.tool
+```
+
+(No Python? Drop the `| python3 -m json.tool` part and just read the raw
+JSON, or pipe to `jq` if you have it installed.)
+
+The response looks like:
+
+```json
+{
+  "pipelines": [
+    {
+      "id": "THIS_IS_YOUR_GHL_PIPELINE_ID",
+      "name": "Flex Rentals Pipeline",
+      "stages": [
+        { "id": "THIS_IS_YOUR_GHL_APPLICATION_SUBMITTED_STAGE_ID", "name": "Application Submitted" },
+        { "id": "...", "name": "Under Review" }
+      ]
+    }
+  ]
+}
+```
+
+1. Find the pipeline object where `"name"` matches your pipeline (e.g.
+   "Flex Rentals Pipeline") — its `"id"` is `GHL_PIPELINE_ID`.
+2. Inside that same object's `"stages"` array, find the entry where
+   `"name"` is "Application Submitted" — its `"id"` is
+   `GHL_APPLICATION_SUBMITTED_STAGE_ID`.
+
+If the pipeline or stage doesn't exist yet, create it first (Opportunities
+→ Pipelines → Add Pipeline, name it "Flex Rentals Pipeline" with a first
+stage named "Application Submitted"), then re-run the curl command.
 
 **Never** put these four values in `index.html`, `js/script.js`, or anywhere
 else that ships to the browser or gets committed to source control — they
