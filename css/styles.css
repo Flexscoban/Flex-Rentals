@@ -782,10 +782,17 @@ h1, h2, h3, h4 {
   border-color: rgba(52, 199, 89, 0.35);
 }
 .fleet-card__media {
-  background: radial-gradient(circle at 50% 30%, rgba(52, 199, 89, 0.12), transparent 70%);
-  padding: var(--space-6) var(--space-5) var(--space-3);
+  background: var(--color-dark-900);
+  line-height: 0;
 }
-.fleet-card__illustration { width: 100%; height: auto; }
+.fleet-card__photo {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  transition: transform 500ms var(--ease-out);
+}
+.fleet-card:hover .fleet-card__photo { transform: scale(1.04); }
 .fleet-card__body { padding: var(--space-5); }
 .fleet-card__body h3 {
   font-size: 1.2rem;
