@@ -281,6 +281,35 @@ export async function handleApplicationSubmission(formData, env) {
     return errorResponse(502, 'We could not reach our CRM. Please try again or call/text ' + SUPPORT_LINE + '.');
   }
 
+  // Narrowly-scoped fallback: GHL has been observed silently dropping
+  // drivers_license_number from the initial /contacts/upsert call even
+  // though sibling custom fields (platforms, rental_option) in the same
+  // request persist correctly. Immediately re-send just this one field on
+  // its own PUT as a safety net. Best-effort and non-fatal — the contact
+  // (and, below, the opportunity) already exist by this point, so a
+  // failure here must never change the response the applicant sees, and
+  // must never log the actual license number value.
+  if (fields.drivers_license_number && CUSTOM_FIELD_IDS.drivers_license_number) {
+    try {
+      const licenseFallbackRes = await ghlFetch(env, '/contacts/' + contactId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customFields: [
+            { id: CUSTOM_FIELD_IDS.drivers_license_number, field_value: fields.drivers_license_number }
+          ]
+        })
+      });
+      if (!licenseFallbackRes.ok) {
+        // Status only — never the response body, which could echo the
+        // submitted value back.
+        console.error('[GHL] drivers_license_number fallback PUT failed with status', licenseFallbackRes.status);
+      }
+    } catch (err) {
+      console.error('[GHL] drivers_license_number fallback PUT request threw:', err.message);
+    }
+  }
+
   const opportunityBody = {
     locationId: env.GHL_LOCATION_ID,
     pipelineId: env.GHL_PIPELINE_ID,
