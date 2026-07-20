@@ -23,23 +23,36 @@ const GHL_API_BASE = 'https://services.leadconnectorhq.com';
 const GHL_API_VERSION = '2021-07-28';
 
 /* --------------------------------------------------------------------------
-   Custom Field IDs — these are specific to YOUR GoHighLevel sub-account and
-   cannot be known ahead of time. After creating the custom fields listed in
-   GHL-FORM-INTEGRATION.md, copy each field's ID and paste it below. Until
-   you do, submissions still work — any field left as "REPLACE_WITH_..." is
-   simply skipped so it never crashes a live application.
+   Custom Field IDs — these are specific to YOUR GoHighLevel sub-account.
+   A blank value means that field hasn't been created in GHL yet (or, for
+   the three "_url" fields below, is deliberately not wired in yet — see
+   the comment at the buildCustomFields() call site in
+   handleApplicationSubmission()). Any field left blank is simply skipped
+   so it never crashes a live application.
+
+   license_front_url / license_back_url / platform_screenshot_url are
+   FILE_UPLOAD-type custom fields in GHL, not TEXT fields — the current
+   code uploads each file to GHL's Media Library and gets back a hosted
+   URL (string), which is the right format for a TEXT field but has NOT
+   been confirmed to be what GHL's API expects for a FILE_UPLOAD field's
+   field_value. Sending the wrong shape risks the whole /contacts/upsert
+   call being rejected (breaking contact creation entirely, not just the
+   file fields), so their IDs are recorded here but intentionally left
+   out of the payload for now. Confirm the expected format (GHL's API
+   reference for FILE_UPLOAD custom fields, or a small isolated test)
+   before wiring them into buildCustomFields() below.
    -------------------------------------------------------------------------- */
 const CUSTOM_FIELD_IDS = {
-  sms_consent: 'REPLACE_WITH_FIELD_ID_sms_consent',
-  drivers_license_number: 'REPLACE_WITH_FIELD_ID_drivers_license_number',
-  drivers_license_state: 'REPLACE_WITH_FIELD_ID_drivers_license_state',
-  license_front_url: 'REPLACE_WITH_FIELD_ID_license_front_url',
-  license_back_url: 'REPLACE_WITH_FIELD_ID_license_back_url',
-  platforms: 'REPLACE_WITH_FIELD_ID_platforms',
-  platform_screenshot_url: 'REPLACE_WITH_FIELD_ID_platform_screenshot_url',
-  rental_option: 'REPLACE_WITH_FIELD_ID_rental_option',
-  rental_notes: 'REPLACE_WITH_FIELD_ID_rental_notes',
-  application_certification: 'REPLACE_WITH_FIELD_ID_application_certification'
+  sms_consent: '',
+  drivers_license_number: 'bqKmhj6NrbgyVei7YEvS',
+  drivers_license_state: '',
+  license_front_url: '3F9ozUT0CvHoXbGbZdtm',
+  license_back_url: '9l9dAfs5Ok4bQaylg3HF',
+  platforms: 'owq1poGaxvV1pxKn54Ig',
+  platform_screenshot_url: 'UQDBEgFi3TfogMuGK14P',
+  rental_option: 'w5ykHpRM2xVtyoVF79mj',
+  rental_notes: '',
+  application_certification: ''
 };
 
 const REQUIRED_TEXT_FIELDS = [
@@ -201,22 +214,28 @@ export async function handleApplicationSubmission(formData, env) {
   }
 
   // File uploads are best-effort: one flaky upload should not lose an
-  // otherwise-complete application. A failed upload is recorded on the
-  // contact as plain text so staff know to follow up for that document.
+  // otherwise-complete application. This upload to GHL's Media Library
+  // happens regardless of the customFields decision below — the files are
+  // safely stored in GHL either way.
   const [licenseFrontUrl, licenseBackUrl, platformScreenshotUrl] = await Promise.all([
     uploadFileToGHL(env, files.license_front, 'license-front'),
     uploadFileToGHL(env, files.license_back, 'license-back'),
     uploadFileToGHL(env, files.platform_screenshot, 'platform-screenshot')
   ]);
+  if (!licenseFrontUrl) console.error('[GHL] license_front upload did not return a URL — not attached to contact.');
+  if (!licenseBackUrl) console.error('[GHL] license_back upload did not return a URL — not attached to contact.');
+  if (!platformScreenshotUrl) console.error('[GHL] platform_screenshot upload did not return a URL — not attached to contact.');
 
+  // license_front_url / license_back_url / platform_screenshot_url are
+  // deliberately NOT included below yet — see the long comment on
+  // CUSTOM_FIELD_IDS above. Once the FILE_UPLOAD field value format is
+  // confirmed, add those three keys back here (their IDs are already
+  // filled in and ready to go).
   const customFields = buildCustomFields({
     sms_consent: fields.sms_consent ? 'Yes' : 'No',
     drivers_license_number: fields.drivers_license_number,
     drivers_license_state: fields.drivers_license_state,
-    license_front_url: licenseFrontUrl || 'Upload failed — follow up with applicant',
-    license_back_url: licenseBackUrl || 'Upload failed — follow up with applicant',
     platforms: fields.platforms,
-    platform_screenshot_url: platformScreenshotUrl || 'Upload failed — follow up with applicant',
     rental_option: fields.rental_option,
     rental_notes: fields.rental_notes,
     application_certification: fields.application_certification ? 'Yes' : 'No'
