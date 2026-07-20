@@ -20,6 +20,7 @@
   --color-white: #FFFFFF;
   --color-muted: #9AA3AC;        /* secondary text on dark */
   --color-border: rgba(255, 255, 255, 0.08);
+  --color-gold: #F4B740;         /* review star rating */
 
   /* Typography */
   --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -912,6 +913,8 @@ h1, h2, h3, h4 {
 .reviews__track::-webkit-scrollbar { display: none; }
 
 .review-card {
+  display: flex;
+  flex-direction: column;
   flex: 0 0 85%;
   scroll-snap-align: start;
   text-align: left;
@@ -923,25 +926,34 @@ h1, h2, h3, h4 {
   padding: var(--space-6);
   box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.6);
 }
-.review-card__badge {
-  display: inline-block;
-  background: rgba(52, 199, 89, 0.14);
-  color: var(--color-accent);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
+.review-card__quote-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: rgba(52, 199, 89, 0.1);
   margin-bottom: var(--space-4);
+}
+.review-card__quote-mark::before {
+  content: '\201C';
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-accent);
 }
 .review-card__stars {
   display: flex;
   gap: 4px;
-  color: var(--color-accent);
+  color: var(--color-gold);
   margin-bottom: var(--space-4);
 }
 .review-card__stars .icon { width: 16px; height: 16px; fill: currentColor; }
+.review-card__headline {
+  font-size: 1.05rem;
+  margin-bottom: var(--space-2);
+}
 .review-card__quote {
   color: var(--color-muted);
   font-size: 0.95rem;
@@ -951,6 +963,9 @@ h1, h2, h3, h4 {
   font-weight: 600;
   font-size: 0.85rem;
   color: var(--color-white);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
 }
 
 .reviews__nav {
