@@ -959,13 +959,25 @@ h1, h2, h3, h4 {
   font-size: 0.95rem;
   margin-bottom: var(--space-4);
 }
+.review-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+.review-card__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
 .review-card__author {
   font-weight: 600;
   font-size: 0.85rem;
   color: var(--color-white);
-  margin-top: auto;
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-border);
 }
 
 .reviews__nav {
