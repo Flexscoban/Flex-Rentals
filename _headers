@@ -1,0 +1,30 @@
+# Cloudflare Pages custom response headers.
+# https://developers.cloudflare.com/pages/configuration/headers/
+#
+# This site has no build step and no asset fingerprinting — css/styles.css,
+# js/script.js, and everything under assets/ keep the exact same filename
+# across every deploy. That means aggressive/long-lived caching on those
+# paths would hide real content changes behind a stale cached copy with the
+# same URL (which is what happened to joinflexrentals.com after the avatar
+# images shipped: the pages.dev deployment URLs showed the update
+# immediately, but the custom domain kept serving an older cached copy).
+#
+# Strategy: HTML always revalidates with the origin on every request (so a
+# new deploy is visible immediately), while static assets get a short cache
+# window — real caching benefit for repeat views within the hour, without
+# being able to hide a change for long.
+
+/*.html
+  Cache-Control: no-cache
+
+/
+  Cache-Control: no-cache
+
+/css/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/js/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=3600, must-revalidate
