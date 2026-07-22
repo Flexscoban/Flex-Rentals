@@ -145,7 +145,25 @@ async function ghl(path, options = {}, describedBody = undefined) {
   }
   console.log('\n→ REQUEST', JSON.stringify(logRequest, null, 2));
 
-  const res = await fetch(url, Object.assign({}, options, { headers }));
+  // Node's fetch throws a bare "fetch failed" on network-level failures
+  // (reset connections, transient drops mid-upload, etc.) and buries the
+  // actual reason in err.cause. Larger multipart bodies (a real photo vs.
+  // a 68-byte test pixel) take measurably longer to send, which is enough
+  // window for a transient drop — so retry this class of failure once
+  // before giving up, and always surface the real cause either way.
+  const MAX_ATTEMPTS = 2;
+  let res;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+    try {
+      res = await fetch(url, Object.assign({}, options, { headers }));
+      break;
+    } catch (err) {
+      const cause = err && err.cause ? ' — cause: ' + (err.cause.message || err.cause) : '';
+      console.error('✗ Network-level fetch failure (attempt ' + attempt + '/' + MAX_ATTEMPTS + '): ' + err.message + cause);
+      if (attempt === MAX_ATTEMPTS) throw err;
+      console.log('  Retrying once...');
+    }
+  }
   const text = await res.text();
   let body = text;
   try {
@@ -372,5 +390,10 @@ async function main() {
 
 main().catch((err) => {
   console.error('\n✗ Script threw an unexpected error:', err.message);
+  let cause = err.cause;
+  while (cause) {
+    console.error('  caused by:', cause.message || cause);
+    cause = cause.cause;
+  }
   process.exit(1);
 });
