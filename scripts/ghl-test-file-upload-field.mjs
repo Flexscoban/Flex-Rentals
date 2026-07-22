@@ -2,70 +2,84 @@
 /* ==========================================================================
    ONE-OFF DIAGNOSTIC — NOT part of the live application-submission path.
 
-   Answers a single question: what field_value shape does GHL's API expect
-   when writing to a FILE_UPLOAD-type custom field via PUT /contacts/{id}?
+   Tests HighLevel's DOCUMENTED file-upload-to-custom-field flow, not a
+   guess: https://marketplace.gohighlevel.com/docs/ghl/locations/upload-file-custom-fields/
+     - POST /locations/{locationId}/customFields/upload
+     - multipart/form-data, one field per file, keyed "<custom_field_id>_<uuid>"
+       (custom_field_id = the GHL custom field's ID, uuid = a fresh random id
+       you generate to identify this particular file)
 
-   This script never touches serverless/lib/ghl.js, never touches a real
-   applicant contact, and never logs the private integration token.
+   What's NOT fully nailed down by public docs, and what this script exists
+   to empirically settle:
+     - Whether that upload call alone attaches the file to a contact, or
+       whether a separate PUT /contacts/{id} is still required afterward
+       with a uuid-keyed map as field_value (contact-level FILE_UPLOAD
+       values are documented as a map keyed by uuid containing file
+       metadata + the download URL).
+   The script does NOT guess blindly: it inspects the upload response,
+   and only attempts a follow-up PUT if the response doesn't already look
+   like a fully-updated contact with this field populated. That follow-up
+   attempt is clearly labeled as best-effort/unconfirmed in its own log
+   section, separate from the documented upload call.
 
-   What it does, in order:
-     1. Looks up the target custom field's own metadata from GHL (dataType,
-        name, etc.) so we have GHL's own description of the field on record.
-     2. Resolves a test contact — either the one you point it at via
-        GHL_TEST_CONTACT_ID, or (if you don't set that) a throwaway contact
-        this script creates itself, obviously labeled as a test.
-     3. Resolves a test image URL — either GHL_TEST_IMAGE_URL if you set
-        one, or a tiny 1x1 PNG this script uploads to GHL's Media Library
-        to get a real hosted URL.
-     4. Sends ONE PUT /contacts/{contactId} with ONE custom field in the
-        body: { customFields: [{ id: <fieldId>, field_value: <format> }] }.
-        Default format is a plain URL string — the same shape every other
-        custom field in ghl.js already uses successfully. Set
-        GHL_TEST_FIELD_VALUE_FORMAT=array to try the alternate
-        [{ url: <url> }] shape instead, if the string format doesn't stick.
-     5. Re-fetches the contact and prints back whatever GHL now reports for
-        that field, so you have a first read before you go check the UI.
+   This script never touches serverless/lib/ghl.js or the live
+   application-submission path, and never writes to a real applicant
+   contact — it only creates/uses a disposable, clearly-labeled test
+   contact. The private integration token is never printed.
 
-   Required environment variables (same values you already set as
-   Cloudflare Pages secrets — pull them from wherever you stored them
-   originally, e.g. your GHL Private Integration token page / password
-   manager; Cloudflare will not show you the saved value again):
+   Steps:
+     1. GET the target custom field's own metadata from GHL (best-effort,
+        non-fatal if the exact path is off — informational only).
+     2. Resolve a test contact — GHL_TEST_CONTACT_ID if you set one,
+        otherwise a throwaway contact this script creates itself.
+     3. Generate a fresh uuid and a tiny 1x1 test PNG in memory.
+     4. POST the documented upload endpoint with ONE multipart field:
+        key "<custom_field_id>_<uuid>", value = the test PNG.
+     5. Inspect the response. If it doesn't already look like our field is
+        populated on the contact, attempt ONE best-effort follow-up
+        PUT /contacts/{id} with a uuid-keyed map as field_value, clearly
+        flagged as unconfirmed.
+     6. Re-fetch the contact and print exactly how GHL now represents the
+        field, so you have a full picture before checking the UI.
+
+   Required environment variables (same values already saved as Cloudflare
+   Pages secrets — pull them from wherever you stored them originally;
+   Cloudflare will not show you a saved secret's value again):
      GHL_LOCATION_ID
      GHL_PRIVATE_INTEGRATION_TOKEN
 
    Optional:
-     GHL_TEST_CONTACT_ID          — reuse an existing test contact instead
-                                     of creating a new one.
-     GHL_TEST_IMAGE_URL           — reuse an existing hosted image instead
-                                     of uploading a throwaway one.
-     GHL_TEST_FIELD_ID            — which custom field to write to.
-                                     Defaults to license_front_url's ID.
-     GHL_TEST_FIELD_VALUE_FORMAT  — "string" (default) or "array".
+     GHL_TEST_CONTACT_ID  — reuse an existing disposable test contact
+                             instead of creating a new one.
+     GHL_TEST_FIELD_ID    — which custom field to test against. Defaults
+                             to the Driver License Front field
+                             (license_front_url) already recorded in
+                             serverless/lib/ghl.js.
 
-   Run with:
+   Run with exactly:
      GHL_LOCATION_ID=... GHL_PRIVATE_INTEGRATION_TOKEN=... \
-       node scripts/ghl-test-file-upload-field.mjs
-   (or: npm run ghl:test-file-upload-field)
+       npm run ghl:test-file-upload-field
+   (equivalent to: node scripts/ghl-test-file-upload-field.mjs)
    ========================================================================== */
+
+import { randomUUID } from 'node:crypto';
 
 const GHL_API_BASE = 'https://services.leadconnectorhq.com';
 const GHL_API_VERSION = '2021-07-28';
 
 // Same three FILE_UPLOAD field IDs already recorded in
-// serverless/lib/ghl.js CUSTOM_FIELD_IDS — not read from that file on
-// purpose, so this script has zero import-time coupling to the live path.
+// serverless/lib/ghl.js CUSTOM_FIELD_IDS — not imported from that file on
+// purpose, so this script has zero coupling to the live path.
 const FILE_UPLOAD_FIELD_IDS = {
-  license_front_url: '3F9ozUT0CvHoXbGbZdtm',
-  license_back_url: '9l9dAfs5Ok4bQaylg3HF',
-  platform_screenshot_url: 'UQDBEgFi3TfogMuGK14P'
+  license_front_url: '3F9ozUT0CvHoXbGbZdtm', // "Driver License Front"
+  license_back_url: '9l9dAfs5Ok4bQaylg3HF', // "Driver License Back"
+  platform_screenshot_url: 'UQDBEgFi3TfogMuGK14P' // "Platform Screenshot"
 };
 
 const LOCATION_ID = process.env.GHL_LOCATION_ID;
 const TOKEN = process.env.GHL_PRIVATE_INTEGRATION_TOKEN;
 const TEST_CONTACT_ID = process.env.GHL_TEST_CONTACT_ID || null;
-const TEST_IMAGE_URL = process.env.GHL_TEST_IMAGE_URL || null;
 const FIELD_ID = process.env.GHL_TEST_FIELD_ID || FILE_UPLOAD_FIELD_IDS.license_front_url;
-const VALUE_FORMAT = process.env.GHL_TEST_FIELD_VALUE_FORMAT === 'array' ? 'array' : 'string';
 
 function fail(message) {
   console.error('\n✗ ' + message + '\n');
@@ -89,14 +103,20 @@ function redactedHeaders(headers) {
   return copy;
 }
 
-async function ghl(path, options = {}) {
+// Logs a JSON-safe description of a fetch call — for multipart bodies we
+// log field names/filenames/sizes, never raw binary.
+async function ghl(path, options = {}, describedBody = undefined) {
   const headers = Object.assign(
-    { Authorization: 'Bearer ' + TOKEN, Version: GHL_API_VERSION },
+    { Authorization: 'Bearer ' + TOKEN, Version: GHL_API_VERSION, Accept: 'application/json' },
     options.headers || {}
   );
   const url = GHL_API_BASE + path;
   const logRequest = { url, method: options.method || 'GET', headers: redactedHeaders(headers) };
-  if (typeof options.body === 'string') logRequest.body = JSON.parse(options.body);
+  if (describedBody !== undefined) {
+    logRequest.body = describedBody;
+  } else if (typeof options.body === 'string') {
+    logRequest.body = JSON.parse(options.body);
+  }
   console.log('\n→ REQUEST', JSON.stringify(logRequest, null, 2));
 
   const res = await fetch(url, Object.assign({}, options, { headers }));
@@ -111,22 +131,48 @@ async function ghl(path, options = {}) {
   return { ok: res.ok, status: res.status, body };
 }
 
-function tinyPngFile() {
+function tinyPngFile(name) {
   // Smallest possible valid PNG: a single transparent pixel. Bytes are a
   // well-known minimal PNG literal, not generated from any real asset.
   const base64 =
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
   const bytes = Buffer.from(base64, 'base64');
-  return new File([bytes], 'flex-rentals-test-pixel.png', { type: 'image/png' });
+  return new File([bytes], name, { type: 'image/png' });
+}
+
+// Best-effort scan of the upload response for anything that looks like a
+// hosted URL, so a follow-up PUT (if needed) can reference the real file
+// instead of a placeholder. Returns null if nothing url-shaped is found —
+// the follow-up step logs that plainly rather than pretending otherwise.
+function findUrlInResponse(body) {
+  if (!body || typeof body !== 'object') return null;
+  const seen = new Set();
+  const stack = [body];
+  while (stack.length) {
+    const node = stack.pop();
+    if (!node || typeof node !== 'object' || seen.has(node)) continue;
+    seen.add(node);
+    for (const [key, value] of Object.entries(node)) {
+      if (typeof value === 'string' && /^https?:\/\//.test(value) && /url/i.test(key)) return value;
+      if (value && typeof value === 'object') stack.push(value);
+    }
+  }
+  return null;
+}
+
+function fieldLooksPopulated(contactLike, fieldId) {
+  const fields = contactLike && Array.isArray(contactLike.customFields) ? contactLike.customFields : null;
+  if (!fields) return false;
+  const match = fields.find((f) => f.id === fieldId);
+  return Boolean(match && match.field_value && (typeof match.field_value !== 'object' || Object.keys(match.field_value).length));
 }
 
 async function main() {
-  console.log('=== GHL FILE_UPLOAD custom field format test ===');
-  console.log('Target field ID:', FIELD_ID);
-  console.log('field_value format under test:', VALUE_FORMAT);
+  console.log('=== HighLevel documented FILE_UPLOAD custom field test ===');
+  console.log('Target field ID:', FIELD_ID, '(Driver License Front, unless overridden)');
 
-  // Step 1 — field metadata, straight from GHL, for the record.
-  console.log('\n--- Step 1: fetch custom field metadata ---');
+  // Step 1 — field metadata, straight from GHL, best-effort/non-fatal.
+  console.log('\n--- Step 1: fetch custom field metadata (informational, non-fatal) ---');
   await ghl('/locations/' + LOCATION_ID + '/customFields/' + FIELD_ID, { method: 'GET' });
 
   // Step 2 — resolve a safe test contact.
@@ -160,51 +206,86 @@ async function main() {
     );
   }
 
-  // Step 3 — resolve a test image URL.
-  console.log('\n--- Step 3: resolve test image URL ---');
-  let imageUrl = TEST_IMAGE_URL;
-  if (imageUrl) {
-    console.log('Using existing image URL from GHL_TEST_IMAGE_URL:', imageUrl);
-  } else {
-    console.log('No GHL_TEST_IMAGE_URL set — uploading a throwaway 1x1 test PNG to GHL Media Library.');
-    const uploadForm = new FormData();
-    uploadForm.append('file', tinyPngFile());
-    uploadForm.append('locationId', LOCATION_ID);
-    const uploaded = await ghl('/medias/upload-file', { method: 'POST', body: uploadForm });
-    if (!uploaded.ok) fail('Media upload failed — see response above.');
-    imageUrl = (uploaded.body && (uploaded.body.url || uploaded.body.fileUrl)) || null;
-    if (!imageUrl) fail('Media upload succeeded but returned no url — see response above.');
-    console.log('Uploaded test image URL:', imageUrl);
+  // Step 3 — a fresh uuid + a throwaway test image, per the documented
+  // "<custom_field_id>_<uuid>" multipart key convention.
+  console.log('\n--- Step 3: prepare test file ---');
+  const uuid = randomUUID();
+  const multipartKey = FIELD_ID + '_' + uuid;
+  const fileName = 'flex-rentals-test-pixel.png';
+  const file = tinyPngFile(fileName);
+  console.log('uuid:', uuid);
+  console.log('multipart field key:', multipartKey);
+
+  // Step 4 — the documented upload endpoint.
+  console.log('\n--- Step 4: POST /locations/{locationId}/customFields/upload ---');
+  const uploadForm = new FormData();
+  uploadForm.append(multipartKey, file);
+  const uploadResult = await ghl(
+    '/locations/' + LOCATION_ID + '/customFields/upload',
+    { method: 'POST', body: uploadForm },
+    { multipart: [{ fieldName: multipartKey, filename: fileName, contentType: 'image/png', sizeBytes: file.size }] }
+  );
+  if (!uploadResult.ok) {
+    fail('Upload call failed — see response above. Nothing further to test until this succeeds.');
   }
 
-  // Step 4 — the actual test: one PUT, one custom field.
-  console.log('\n--- Step 4: PUT the FILE_UPLOAD custom field ---');
-  const fieldValue = VALUE_FORMAT === 'array' ? [{ url: imageUrl }] : imageUrl;
-  const putResult = await ghl('/contacts/' + contactId, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ customFields: [{ id: FIELD_ID, field_value: fieldValue }] })
-  });
+  // Step 5 — decide, from the response itself, whether a follow-up PUT is
+  // needed. Never blindly assume either way.
+  console.log('\n--- Step 5: determine whether a separate PUT /contacts/{id} is required ---');
+  const uploadLooksLikeContact = fieldLooksPopulated(uploadResult.body, FIELD_ID);
+  let putAttempted = false;
+  let putResult = null;
 
-  // Step 5 — read the contact back and see what GHL reports for this field.
-  console.log('\n--- Step 5: re-fetch contact and inspect the field ---');
+  if (uploadLooksLikeContact) {
+    console.log(
+      '✓ The upload response already looks like a contact object with field ' +
+        FIELD_ID +
+        ' populated. Skipping the follow-up PUT — it does not appear necessary.'
+    );
+  } else {
+    console.log(
+      '↷ The upload response does NOT look like a fully-populated contact for this field.\n' +
+        '  Attempting ONE best-effort follow-up PUT with a uuid-keyed map as field_value.\n' +
+        '  This shape is our best reading of the docs, NOT independently confirmed —\n' +
+        '  treat this section of the log as the speculative part of the test.'
+    );
+    const discoveredUrl = findUrlInResponse(uploadResult.body);
+    console.log('URL discovered in upload response:', discoveredUrl || '(none found)');
+    const candidateFieldValue = {
+      [uuid]: Object.assign({ name: fileName }, discoveredUrl ? { url: discoveredUrl } : {})
+    };
+    putAttempted = true;
+    putResult = await ghl('/contacts/' + contactId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ customFields: [{ id: FIELD_ID, field_value: candidateFieldValue }] })
+    });
+  }
+
+  // Step 6 — re-fetch the contact and show exactly what GHL reports now.
+  console.log('\n--- Step 6: re-fetch contact and inspect the field ---');
   const refetched = await ghl('/contacts/' + contactId, { method: 'GET' });
   const contact = refetched.body && refetched.body.contact;
   const echoedField =
-    contact && Array.isArray(contact.customFields)
-      ? contact.customFields.find((f) => f.id === FIELD_ID)
-      : null;
+    contact && Array.isArray(contact.customFields) ? contact.customFields.find((f) => f.id === FIELD_ID) : null;
   console.log('\nField as GHL now reports it:', JSON.stringify(echoedField, null, 2) || '(not present)');
 
   console.log('\n=== SUMMARY ===');
-  console.log('Contact ID tested:      ', contactId);
-  console.log('PUT HTTP status:        ', putResult.status, putResult.ok ? '(ok)' : '(FAILED)');
-  console.log('Field present on re-GET:', echoedField ? 'yes' : 'no');
+  console.log('Contact ID tested:              ', contactId);
+  console.log('Upload endpoint HTTP status:    ', uploadResult.status, uploadResult.ok ? '(ok)' : '(FAILED)');
   console.log(
-    '\nNext step: open this contact in the GHL desktop dashboard AND the LeadConnector\n' +
-      'mobile app and confirm the test image actually renders on the ' +
-      Object.keys(FILE_UPLOAD_FIELD_IDS).find((k) => FILE_UPLOAD_FIELD_IDS[k] === FIELD_ID) +
-      ' field before we wire this into the live application form.'
+    'Separate PUT required:          ',
+    uploadLooksLikeContact ? 'NO — upload call alone populated the field' : 'YES (attempted, unconfirmed shape — see Step 5 log)'
+  );
+  if (putAttempted && putResult) {
+    console.log('Follow-up PUT HTTP status:      ', putResult.status, putResult.ok ? '(ok)' : '(FAILED)');
+  }
+  console.log('Field present on final re-GET:  ', echoedField ? 'yes' : 'no');
+  console.log(
+    '\nNext step: open contact ' +
+      contactId +
+      ' in the GHL desktop dashboard AND the LeadConnector mobile app and confirm\n' +
+      'the test image actually renders on the field before telling me to wire this into the live form.'
   );
 }
 
