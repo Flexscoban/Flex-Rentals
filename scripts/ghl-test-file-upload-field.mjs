@@ -62,14 +62,25 @@
                              to the Driver License Front field
                              (license_front_url) already recorded in
                              serverless/lib/ghl.js.
+     GHL_TEST_IMAGE_PATH  — absolute path to a real local image to upload
+                             instead of the synthetic 1x1 test pixel (the
+                             pixel proved the plumbing works but renders
+                             blank in any preview — use this to confirm
+                             an actual visible image). Supported
+                             extensions: .jpg/.jpeg, .png, .webp. The
+                             original filename is preserved and sent to
+                             GHL as-is.
 
-   Run with exactly:
+   Run with exactly (swap in a real image path):
      GHL_LOCATION_ID=... GHL_PRIVATE_INTEGRATION_TOKEN=... \
+       GHL_TEST_IMAGE_PATH="/absolute/path/to/test-image.jpg" \
        npm run ghl:test-file-upload-field
    (equivalent to: node scripts/ghl-test-file-upload-field.mjs)
    ========================================================================== */
 
 import { randomUUID } from 'node:crypto';
+import { readFileSync, existsSync } from 'node:fs';
+import { basename, extname } from 'node:path';
 
 const GHL_API_BASE = 'https://services.leadconnectorhq.com';
 const GHL_API_VERSION = '2021-07-28';
@@ -87,6 +98,14 @@ const LOCATION_ID = process.env.GHL_LOCATION_ID;
 const TOKEN = process.env.GHL_PRIVATE_INTEGRATION_TOKEN;
 const TEST_CONTACT_ID = process.env.GHL_TEST_CONTACT_ID || null;
 const FIELD_ID = process.env.GHL_TEST_FIELD_ID || FILE_UPLOAD_FIELD_IDS.license_front_url;
+const TEST_IMAGE_PATH = process.env.GHL_TEST_IMAGE_PATH || null;
+
+const MIME_TYPES_BY_EXTENSION = {
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp'
+};
 
 function fail(message) {
   console.error('\n✗ ' + message + '\n');
@@ -141,10 +160,43 @@ async function ghl(path, options = {}, describedBody = undefined) {
 function tinyPngFile(name) {
   // Smallest possible valid PNG: a single transparent pixel. Bytes are a
   // well-known minimal PNG literal, not generated from any real asset.
+  // Proves the upload plumbing works but renders blank in any preview —
+  // set GHL_TEST_IMAGE_PATH to test with something actually visible.
   const base64 =
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
   const bytes = Buffer.from(base64, 'base64');
   return new File([bytes], name, { type: 'image/png' });
+}
+
+// Resolves the file to upload: a real local image if GHL_TEST_IMAGE_PATH
+// is set (original filename preserved, MIME type derived from extension),
+// otherwise the synthetic 1x1 test pixel.
+function resolveTestFile() {
+  if (!TEST_IMAGE_PATH) {
+    console.log('No GHL_TEST_IMAGE_PATH set — using the synthetic 1x1 test pixel (will render blank).');
+    const name = 'flex-rentals-test-pixel.png';
+    return { file: tinyPngFile(name), fileName: name };
+  }
+
+  if (!existsSync(TEST_IMAGE_PATH)) {
+    fail('GHL_TEST_IMAGE_PATH does not point to a file that exists: ' + TEST_IMAGE_PATH);
+  }
+
+  const ext = extname(TEST_IMAGE_PATH).toLowerCase();
+  const mimeType = MIME_TYPES_BY_EXTENSION[ext];
+  if (!mimeType) {
+    fail(
+      'Unsupported file extension "' +
+        ext +
+        '" for GHL_TEST_IMAGE_PATH. Supported: ' +
+        Object.keys(MIME_TYPES_BY_EXTENSION).join(', ')
+    );
+  }
+
+  const fileName = basename(TEST_IMAGE_PATH);
+  const bytes = readFileSync(TEST_IMAGE_PATH);
+  console.log('Using real local image:', TEST_IMAGE_PATH, '(' + bytes.length + ' bytes, ' + mimeType + ')');
+  return { file: new File([bytes], fileName, { type: mimeType }), fileName };
 }
 
 // Best-effort scan of the upload response for anything that looks like a
@@ -213,13 +265,13 @@ async function main() {
     );
   }
 
-  // Step 3 — a fresh uuid + a throwaway test image, per the documented
+  // Step 3 — a fresh uuid + the test image (real file if GHL_TEST_IMAGE_PATH
+  // is set, otherwise the synthetic pixel), per the documented
   // "<custom_field_id>_<uuid>" multipart key convention.
   console.log('\n--- Step 3: prepare test file ---');
   const uuid = randomUUID();
   const multipartKey = FIELD_ID + '_' + uuid;
-  const fileName = 'flex-rentals-test-pixel.png';
-  const file = tinyPngFile(fileName);
+  const { file, fileName } = resolveTestFile();
   console.log('uuid:', uuid);
   console.log('multipart field key:', multipartKey);
 
@@ -251,7 +303,7 @@ async function main() {
     { method: 'POST', body: uploadForm },
     {
       fields: { id: contactId, maxFiles: '1' },
-      multipart: [{ fieldName: multipartKey, filename: fileName, contentType: 'image/png', sizeBytes: file.size }]
+      multipart: [{ fieldName: multipartKey, filename: fileName, contentType: file.type, sizeBytes: file.size }]
     }
   );
   if (!uploadResult.ok) {
