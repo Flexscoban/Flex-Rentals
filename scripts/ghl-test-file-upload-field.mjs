@@ -16,6 +16,13 @@
        with a uuid-keyed map as field_value (contact-level FILE_UPLOAD
        values are documented as a map keyed by uuid containing file
        metadata + the download URL).
+     - Two more required form fields GHL's API itself surfaced via a 422
+       ("id must be a string", "maxFiles must be a string") that no public
+       doc snippet mentions. Best available reading, corroborated by the
+       sibling /forms/upload-to-custom-fields endpoint's documented
+       per-contact association: id = the target record's id (contactId),
+       maxFiles = file count in this request as a string. Sent below and
+       verified by what the endpoint actually returns next.
    The script does NOT guess blindly: it inspects the upload response,
    and only attempts a follow-up PUT if the response doesn't already look
    like a fully-updated contact with this field populated. That follow-up
@@ -216,14 +223,36 @@ async function main() {
   console.log('uuid:', uuid);
   console.log('multipart field key:', multipartKey);
 
-  // Step 4 — the documented upload endpoint.
+  // Step 4 — the documented upload endpoint. A prior run against this same
+  // endpoint returned 422 { "id must be a string", "maxFiles must be a
+  // string" } — i.e. GHL's own validator, not a guess, telling us two form
+  // fields are missing beyond the file itself. Neither is spelled out in
+  // any public doc snippet we could find, but the sibling
+  // /forms/upload-to-custom-fields endpoint is documented elsewhere as
+  // associating uploaded files with a specific contact, which is the most
+  // coherent reading of a bare "id" field on a per-record upload call (the
+  // custom field's own id is already embedded in the multipart key
+  // prefix, so a second "id" field would be redundant if it meant the
+  // same thing). Testing that reading directly:
+  //   id       = the target record's id (our test contactId)
+  //   maxFiles = count of files in this request, as a string
+  // Flagged clearly below as an inference from the 422, confirmed or
+  // refuted by whatever this call returns next.
   console.log('\n--- Step 4: POST /locations/{locationId}/customFields/upload ---');
+  console.log(
+    'Inference from prior 422 (id + maxFiles required, not found in public docs): sending id=<contactId>, maxFiles="1".'
+  );
   const uploadForm = new FormData();
+  uploadForm.append('id', contactId);
+  uploadForm.append('maxFiles', '1');
   uploadForm.append(multipartKey, file);
   const uploadResult = await ghl(
     '/locations/' + LOCATION_ID + '/customFields/upload',
     { method: 'POST', body: uploadForm },
-    { multipart: [{ fieldName: multipartKey, filename: fileName, contentType: 'image/png', sizeBytes: file.size }] }
+    {
+      fields: { id: contactId, maxFiles: '1' },
+      multipart: [{ fieldName: multipartKey, filename: fileName, contentType: 'image/png', sizeBytes: file.size }]
+    }
   );
   if (!uploadResult.ok) {
     fail('Upload call failed — see response above. Nothing further to test until this succeeds.');
