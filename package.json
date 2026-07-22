@@ -4,7 +4,8 @@
   "type": "module",
   "description": "Flex Rentals static site + serverless GoHighLevel application-submission function.",
   "scripts": {
-    "test": "node --test serverless/lib/*.test.mjs"
+    "test": "node --test serverless/lib/*.test.mjs",
+    "ghl:test-file-upload-field": "node scripts/ghl-test-file-upload-field.mjs"
   },
   "engines": {
     "node": ">=18"
