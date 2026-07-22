@@ -19,6 +19,15 @@ const BASE_ENV = {
 const DRIVERS_LICENSE_NUMBER_FIELD_ID = 'bqKmhj6NrbgyVei7YEvS';
 const TEST_LICENSE_NUMBER = 'TEST123';
 
+// Same three FILE_UPLOAD field IDs hardcoded in serverless/lib/ghl.js
+// CUSTOM_FIELD_IDS — not imported (the module doesn't export them), kept
+// in sync manually like DRIVERS_LICENSE_NUMBER_FIELD_ID above already was.
+const LICENSE_FRONT_FIELD_ID = '3F9ozUT0CvHoXbGbZdtm';
+const LICENSE_BACK_FIELD_ID = '9l9dAfs5Ok4bQaylg3HF';
+const PLATFORM_SCREENSHOT_FIELD_ID = 'UQDBEgFi3TfogMuGK14P';
+
+const MOCK_CONTACT_ID = 'contact_999';
+
 function makeValidFormData(overrides = {}) {
   const fd = new FormData();
   const defaults = {
@@ -43,46 +52,100 @@ function makeValidFormData(overrides = {}) {
   return fd;
 }
 
-const MOCK_CONTACT_ID = 'contact_999';
+// Pulls the "<fieldId>_<uuid>" file entry back out of a customFields/upload
+// multipart body, skipping the "id" and "maxFiles" fields alongside it.
+function extractUploadFieldAndFile(formData) {
+  for (const [key, value] of formData.entries()) {
+    if (key === 'id' || key === 'maxFiles') continue;
+    return { fieldId: key.split('_')[0], uuid: key.split('_')[1], file: value };
+  }
+  return { fieldId: null, uuid: null, file: null };
+}
 
-function withMockedGhlFetch(run) {
+/**
+ * A single configurable mock for every GHL call handleApplicationSubmission
+ * makes: contact upsert, the drivers_license_number fallback PUT, the
+ * customFields/upload + attach PUT pair for each of the three files, and
+ * opportunity creation. `failUploadFieldIds` / `failAttachFieldIds` let a
+ * test simulate one or more files failing at either stage;
+ * `failLicenseFallbackPut` reproduces the pre-existing fallback-failure
+ * test unchanged.
+ */
+function createMockFetch(opts = {}) {
+  const { failUploadFieldIds = [], failAttachFieldIds = [], failLicenseFallbackPut = false } = opts;
   const calls = [];
   let capturedContactBody = null;
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async (url, options) => {
+
+  const fetchImpl = async (url, options) => {
+    const urlStr = String(url);
     const method = (options && options.method) || 'GET';
     const isJsonBody = options && typeof options.body === 'string';
-    const body = isJsonBody ? JSON.parse(options.body) : null;
-    calls.push({ url: String(url), method, body });
+    const jsonBody = isJsonBody ? JSON.parse(options.body) : null;
+    const isFormDataBody = options && options.body instanceof FormData;
+    calls.push({ url: urlStr, method, body: jsonBody, formData: isFormDataBody ? options.body : null });
 
-    if (String(url).includes('/medias/upload-file')) {
-      return new Response(JSON.stringify({ url: 'https://media.example.com/x' }), { status: 200 });
-    }
-    if (String(url).includes('/contacts/upsert')) {
-      capturedContactBody = body;
+    if (urlStr.includes('/contacts/upsert')) {
+      capturedContactBody = jsonBody;
       return new Response(JSON.stringify({ contact: { id: MOCK_CONTACT_ID } }), { status: 200 });
     }
-    if (String(url).includes('/contacts/' + MOCK_CONTACT_ID) && method === 'PUT') {
+
+    if (urlStr.includes('/customFields/upload')) {
+      const { fieldId, file } = extractUploadFieldAndFile(options.body);
+      if (failUploadFieldIds.includes(fieldId)) {
+        return new Response('upload error', { status: 500 });
+      }
+      return new Response(
+        JSON.stringify({
+          uploadedFiles: { [file.name]: 'https://files.example.com/' + fieldId },
+          meta: [{ originalname: file.name, url: 'https://files.example.com/' + fieldId }]
+        }),
+        { status: 201 }
+      );
+    }
+
+    if (urlStr.includes('/contacts/' + MOCK_CONTACT_ID) && method === 'PUT') {
+      const fieldEntry = jsonBody && jsonBody.customFields && jsonBody.customFields[0];
+      const fieldId = fieldEntry && fieldEntry.id;
+      if (fieldId === DRIVERS_LICENSE_NUMBER_FIELD_ID) {
+        return failLicenseFallbackPut
+          ? new Response('server error', { status: 500 })
+          : new Response(JSON.stringify({ contact: { id: MOCK_CONTACT_ID } }), { status: 200 });
+      }
+      if (failAttachFieldIds.includes(fieldId)) {
+        return new Response('attach error', { status: 500 });
+      }
       return new Response(JSON.stringify({ contact: { id: MOCK_CONTACT_ID } }), { status: 200 });
     }
-    if (String(url).includes('/opportunities/')) {
+
+    if (urlStr.includes('/opportunities/')) {
       return new Response(JSON.stringify({ id: 'opp_111' }), { status: 200 });
     }
-    throw new Error('Unexpected fetch to ' + url);
+
+    throw new Error('Unexpected fetch to ' + urlStr);
   };
-  return run(() => capturedContactBody, calls).finally(() => {
+
+  return { calls, getCapturedContactBody: () => capturedContactBody, fetchImpl };
+}
+
+async function withMockedGhlFetch(opts, run) {
+  const mock = createMockFetch(opts);
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = mock.fetchImpl;
+  try {
+    await run(mock);
+  } finally {
     globalThis.fetch = originalFetch;
-  });
+  }
 }
 
 test('drivers_license_number reaches /contacts/upsert customFields with the correct field ID and value', async () => {
-  await withMockedGhlFetch(async (getCapturedContactBody) => {
+  await withMockedGhlFetch({}, async (mock) => {
     const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
     const body = await res.json();
     assert.equal(res.status, 200);
     assert.equal(body.ok, true);
 
-    const contactBody = getCapturedContactBody();
+    const contactBody = mock.getCapturedContactBody();
     assert.ok(contactBody, 'contact upsert should have been called');
 
     const licenseField = contactBody.customFields.find((f) => f.id === DRIVERS_LICENSE_NUMBER_FIELD_ID);
@@ -103,13 +166,13 @@ test('a blank drivers_license_number is rejected before reaching GHL (required f
 });
 
 test('drivers_license_number fallback PUT is sent to the right contact with the right field ID and value', async () => {
-  await withMockedGhlFetch(async (_getCapturedContactBody, calls) => {
+  await withMockedGhlFetch({}, async (mock) => {
     const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
     const body = await res.json();
     assert.equal(res.status, 200);
     assert.equal(body.ok, true);
 
-    const putCall = calls.find((c) => c.method === 'PUT' && c.url.includes('/contacts/'));
+    const putCall = mock.calls.find((c) => c.method === 'PUT' && c.url.includes('/contacts/'));
     assert.ok(putCall, 'a PUT /contacts/{contactId} call should have been made');
     assert.equal(putCall.url, 'https://services.leadconnectorhq.com/contacts/' + MOCK_CONTACT_ID);
     assert.deepEqual(putCall.body, {
@@ -117,44 +180,127 @@ test('drivers_license_number fallback PUT is sent to the right contact with the 
     });
 
     // The fallback PUT must run after the contact upsert (it needs the
-    // contact id) and it must not replace or duplicate the contact upsert
-    // or opportunity creation calls.
-    const upsertIndex = calls.findIndex((c) => c.url.includes('/contacts/upsert'));
-    const putIndex = calls.findIndex((c) => c.method === 'PUT' && c.url.includes('/contacts/'));
+    // contact id) and there must be exactly one upsert and one opportunity
+    // call, no matter how many file-attach calls also happened.
+    const upsertIndex = mock.calls.findIndex((c) => c.url.includes('/contacts/upsert'));
+    const putIndex = mock.calls.findIndex((c) => c.method === 'PUT' && c.url.includes('/contacts/'));
     assert.ok(upsertIndex !== -1 && putIndex > upsertIndex, 'PUT must happen after the upsert');
-    assert.equal(calls.filter((c) => c.url.includes('/contacts/upsert')).length, 1);
-    assert.equal(calls.filter((c) => c.url.includes('/opportunities/')).length, 1);
+    assert.equal(mock.calls.filter((c) => c.url.includes('/contacts/upsert')).length, 1);
+    assert.equal(mock.calls.filter((c) => c.url.includes('/opportunities/')).length, 1);
   });
 });
 
 test('drivers_license_number fallback PUT failure does not change the success response or block the opportunity', async () => {
-  const originalFetch = globalThis.fetch;
-  const calls = [];
-  globalThis.fetch = async (url, options) => {
-    const method = (options && options.method) || 'GET';
-    calls.push({ url: String(url), method });
-    if (String(url).includes('/medias/upload-file')) {
-      return new Response(JSON.stringify({ url: 'https://media.example.com/x' }), { status: 200 });
-    }
-    if (String(url).includes('/contacts/upsert')) {
-      return new Response(JSON.stringify({ contact: { id: MOCK_CONTACT_ID } }), { status: 200 });
-    }
-    if (String(url).includes('/contacts/' + MOCK_CONTACT_ID) && method === 'PUT') {
-      return new Response('server error', { status: 500 });
-    }
-    if (String(url).includes('/opportunities/')) {
-      return new Response(JSON.stringify({ id: 'opp_111' }), { status: 200 });
-    }
-    throw new Error('Unexpected fetch to ' + url);
-  };
-
-  try {
+  await withMockedGhlFetch({ failLicenseFallbackPut: true }, async (mock) => {
     const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
     const body = await res.json();
     assert.equal(res.status, 200);
     assert.equal(body.ok, true);
-    assert.equal(calls.filter((c) => c.url.includes('/opportunities/')).length, 1, 'opportunity should still be created');
-  } finally {
-    globalThis.fetch = originalFetch;
-  }
+    assert.equal(mock.calls.filter((c) => c.url.includes('/opportunities/')).length, 1, 'opportunity should still be created');
+  });
+});
+
+test('all three files upload and attach successfully with the confirmed request/response shapes', async () => {
+  await withMockedGhlFetch({}, async (mock) => {
+    const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true);
+
+    const uploadCalls = mock.calls.filter((c) => c.url.includes('/customFields/upload'));
+    assert.equal(uploadCalls.length, 3, 'all three files should hit the upload endpoint');
+
+    const expectedFieldIds = [LICENSE_FRONT_FIELD_ID, LICENSE_BACK_FIELD_ID, PLATFORM_SCREENSHOT_FIELD_ID];
+    uploadCalls.forEach((call) => {
+      assert.equal(call.formData.get('id'), MOCK_CONTACT_ID, 'upload must include id=<contactId>');
+      assert.equal(call.formData.get('maxFiles'), '1', 'upload must include maxFiles="1"');
+      const { fieldId } = extractUploadFieldAndFile(call.formData);
+      assert.ok(expectedFieldIds.includes(fieldId), 'multipart key must be prefixed with a known field ID');
+    });
+
+    // One attach PUT per file, each with the confirmed uuid-keyed
+    // field_value map shape (not a bare URL string), and the original
+    // filename preserved end to end from makeValidFormData() above.
+    const expectedFileNameByFieldId = {
+      [LICENSE_FRONT_FIELD_ID]: 'front.jpg',
+      [LICENSE_BACK_FIELD_ID]: 'back.jpg',
+      [PLATFORM_SCREENSHOT_FIELD_ID]: 'shot.jpg'
+    };
+    expectedFieldIds.forEach((fieldId) => {
+      const attachPut = mock.calls.find(
+        (c) => c.method === 'PUT' && c.url.includes('/contacts/') && c.body && c.body.customFields[0].id === fieldId
+      );
+      assert.ok(attachPut, 'expected an attach PUT for field ' + fieldId);
+      const fieldValue = attachPut.body.customFields[0].field_value;
+      const uuidKeys = Object.keys(fieldValue);
+      assert.equal(uuidKeys.length, 1);
+      assert.deepEqual(fieldValue[uuidKeys[0]], {
+        name: expectedFileNameByFieldId[fieldId],
+        url: 'https://files.example.com/' + fieldId
+      });
+    });
+  });
+});
+
+test('one file failing to upload does not block the other two files, the contact, or the opportunity', async () => {
+  await withMockedGhlFetch({ failUploadFieldIds: [LICENSE_BACK_FIELD_ID] }, async (mock) => {
+    const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true, 'a single file failure must not change the success response');
+
+    assert.equal(mock.calls.filter((c) => c.url.includes('/contacts/upsert')).length, 1, 'contact must still be created');
+    assert.equal(mock.calls.filter((c) => c.url.includes('/opportunities/')).length, 1, 'opportunity must still be created');
+
+    // license_back's upload failed, so it must never reach the attach PUT.
+    const licenseBackAttach = mock.calls.find(
+      (c) => c.method === 'PUT' && c.body && c.body.customFields && c.body.customFields[0].id === LICENSE_BACK_FIELD_ID
+    );
+    assert.equal(licenseBackAttach, undefined, 'license_back should not get an attach PUT after a failed upload');
+
+    // The other two files must still succeed end to end.
+    [LICENSE_FRONT_FIELD_ID, PLATFORM_SCREENSHOT_FIELD_ID].forEach((fieldId) => {
+      const attachPut = mock.calls.find(
+        (c) => c.method === 'PUT' && c.body && c.body.customFields && c.body.customFields[0].id === fieldId
+      );
+      assert.ok(attachPut, 'field ' + fieldId + ' should still have succeeded');
+    });
+  });
+});
+
+test('two files failing (one at upload, one at attach) still leaves the contact and opportunity created, and the third file intact', async () => {
+  await withMockedGhlFetch(
+    { failUploadFieldIds: [LICENSE_BACK_FIELD_ID], failAttachFieldIds: [PLATFORM_SCREENSHOT_FIELD_ID] },
+    async (mock) => {
+      const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
+      const body = await res.json();
+      assert.equal(res.status, 200);
+      assert.equal(body.ok, true, 'two file failures must not change the success response');
+
+      assert.equal(mock.calls.filter((c) => c.url.includes('/contacts/upsert')).length, 1, 'contact must still be created');
+      assert.equal(mock.calls.filter((c) => c.url.includes('/opportunities/')).length, 1, 'opportunity must still be created');
+
+      // license_back never got past the upload step.
+      assert.equal(
+        mock.calls.filter((c) => c.url.includes('/customFields/upload')).length,
+        3,
+        'all three uploads should still be attempted independently'
+      );
+
+      // platform_screenshot uploaded fine but its attach PUT failed — the
+      // failure must be swallowed, not surfaced as an error response.
+      const screenshotUploadCall = mock.calls.find((c) => {
+        if (!c.url.includes('/customFields/upload')) return false;
+        const { fieldId } = extractUploadFieldAndFile(c.formData);
+        return fieldId === PLATFORM_SCREENSHOT_FIELD_ID;
+      });
+      assert.ok(screenshotUploadCall, 'platform_screenshot upload should have been attempted');
+
+      // Only license_front should have a fully successful attach PUT.
+      const frontAttach = mock.calls.find(
+        (c) => c.method === 'PUT' && c.body && c.body.customFields && c.body.customFields[0].id === LICENSE_FRONT_FIELD_ID
+      );
+      assert.ok(frontAttach, 'license_front should still have succeeded');
+    }
+  );
 });

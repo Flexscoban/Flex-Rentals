@@ -24,23 +24,17 @@ const GHL_API_VERSION = '2021-07-28';
 
 /* --------------------------------------------------------------------------
    Custom Field IDs — these are specific to YOUR GoHighLevel sub-account.
-   A blank value means that field hasn't been created in GHL yet (or, for
-   the three "_url" fields below, is deliberately not wired in yet — see
-   the comment at the buildCustomFields() call site in
-   handleApplicationSubmission()). Any field left blank is simply skipped
-   so it never crashes a live application.
+   A blank value means that field hasn't been created in GHL yet. Any
+   field left blank is simply skipped so it never crashes a live
+   application.
 
    license_front_url / license_back_url / platform_screenshot_url are
-   FILE_UPLOAD-type custom fields in GHL, not TEXT fields — the current
-   code uploads each file to GHL's Media Library and gets back a hosted
-   URL (string), which is the right format for a TEXT field but has NOT
-   been confirmed to be what GHL's API expects for a FILE_UPLOAD field's
-   field_value. Sending the wrong shape risks the whole /contacts/upsert
-   call being rejected (breaking contact creation entirely, not just the
-   file fields), so their IDs are recorded here but intentionally left
-   out of the payload for now. Confirm the expected format (GHL's API
-   reference for FILE_UPLOAD custom fields, or a small isolated test)
-   before wiring them into buildCustomFields() below.
+   FILE_UPLOAD-type custom fields in GHL, populated by
+   attachFileUploadCustomField() below via GHL's documented file-upload
+   flow (POST /locations/{locationId}/customFields/upload, followed by a
+   PUT /contacts/{contactId} with a uuid-keyed field_value map) —
+   verified against a real test contact and a real image, visible in the
+   GHL dashboard, before being wired in here.
    -------------------------------------------------------------------------- */
 const CUSTOM_FIELD_IDS = {
   sms_consent: '',
@@ -98,26 +92,72 @@ function isRealFile(value) {
   return value && typeof value !== 'string' && typeof value.size === 'number' && value.size > 0;
 }
 
-async function uploadFileToGHL(env, file, label) {
-  if (!isRealFile(file)) return null;
+/**
+ * Uploads one file to a FILE_UPLOAD custom field and attaches it to a
+ * contact, using GHL's documented flow confirmed against a real test
+ * contact:
+ *   1. POST /locations/{locationId}/customFields/upload — multipart,
+ *      with `id` (the contact id) and `maxFiles` fields alongside the
+ *      file itself, keyed "<fieldId>_<uuid>".
+ *   2. PUT /contacts/{contactId} with the returned url in a uuid-keyed
+ *      field_value map — GHL's upload response does not attach the file
+ *      to the contact by itself.
+ * Never throws: every failure mode is caught, logged as a field id +
+ * HTTP status only (never the file's URL, name, or contents, and never
+ * the token), and reported back as `false` so a bad file can never take
+ * down contact/opportunity creation or the other two files.
+ */
+async function attachFileUploadCustomField(env, contactId, fieldId, file) {
+  if (!isRealFile(file) || !fieldId) return false;
+
+  const uuid = crypto.randomUUID();
+  const uploadForm = new FormData();
+  uploadForm.append('id', contactId);
+  uploadForm.append('maxFiles', '1');
+  uploadForm.append(fieldId + '_' + uuid, file, file.name || 'upload');
+
+  let uploadRes;
   try {
-    const uploadForm = new FormData();
-    uploadForm.append('file', file, file.name || label);
-    uploadForm.append('locationId', env.GHL_LOCATION_ID);
-    const res = await ghlFetch(env, '/medias/upload-file', {
+    uploadRes = await ghlFetch(env, '/locations/' + env.GHL_LOCATION_ID + '/customFields/upload', {
       method: 'POST',
       body: uploadForm
     });
-    if (!res.ok) {
-      console.error('[GHL] media upload failed for ' + label + ':', res.status, await res.text().catch(() => ''));
-      return null;
-    }
-    const data = await res.json();
-    return (data && (data.url || data.fileUrl)) || null;
   } catch (err) {
-    console.error('[GHL] media upload threw for ' + label + ':', err);
-    return null;
+    console.error('[GHL] file upload request threw for field ' + fieldId + ':', err.message);
+    return false;
   }
+  if (!uploadRes.ok) {
+    console.error('[GHL] file upload failed for field ' + fieldId + ' with status', uploadRes.status);
+    return false;
+  }
+
+  const uploadData = await uploadRes.json().catch(() => null);
+  const meta = uploadData && Array.isArray(uploadData.meta) ? uploadData.meta[0] : null;
+  const uploadedUrl = meta && meta.url;
+  if (!uploadedUrl) {
+    console.error('[GHL] file upload for field ' + fieldId + ' returned no url');
+    return false;
+  }
+  const fileName = meta.originalname || file.name || 'upload';
+
+  let attachRes;
+  try {
+    attachRes = await ghlFetch(env, '/contacts/' + contactId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customFields: [{ id: fieldId, field_value: { [uuid]: { name: fileName, url: uploadedUrl } } }]
+      })
+    });
+  } catch (err) {
+    console.error('[GHL] file attach PUT request threw for field ' + fieldId + ':', err.message);
+    return false;
+  }
+  if (!attachRes.ok) {
+    console.error('[GHL] file attach PUT failed for field ' + fieldId + ' with status', attachRes.status);
+    return false;
+  }
+  return true;
 }
 
 function buildCustomFields(values) {
@@ -213,24 +253,10 @@ export async function handleApplicationSubmission(formData, env) {
     return errorResponse(400, 'Missing or invalid fields: ' + missing.join(', '));
   }
 
-  // File uploads are best-effort: one flaky upload should not lose an
-  // otherwise-complete application. This upload to GHL's Media Library
-  // happens regardless of the customFields decision below — the files are
-  // safely stored in GHL either way.
-  const [licenseFrontUrl, licenseBackUrl, platformScreenshotUrl] = await Promise.all([
-    uploadFileToGHL(env, files.license_front, 'license-front'),
-    uploadFileToGHL(env, files.license_back, 'license-back'),
-    uploadFileToGHL(env, files.platform_screenshot, 'platform-screenshot')
-  ]);
-  if (!licenseFrontUrl) console.error('[GHL] license_front upload did not return a URL — not attached to contact.');
-  if (!licenseBackUrl) console.error('[GHL] license_back upload did not return a URL — not attached to contact.');
-  if (!platformScreenshotUrl) console.error('[GHL] platform_screenshot upload did not return a URL — not attached to contact.');
-
   // license_front_url / license_back_url / platform_screenshot_url are
-  // deliberately NOT included below yet — see the long comment on
-  // CUSTOM_FIELD_IDS above. Once the FILE_UPLOAD field value format is
-  // confirmed, add those three keys back here (their IDs are already
-  // filled in and ready to go).
+  // FILE_UPLOAD fields and need a contact id to attach to, so they're
+  // handled separately by attachFileUploadCustomField() below, after the
+  // contact exists — not included in this initial upsert payload.
   const customFields = buildCustomFields({
     sms_consent: fields.sms_consent ? 'Yes' : 'No',
     drivers_license_number: fields.drivers_license_number,
@@ -308,6 +334,27 @@ export async function handleApplicationSubmission(formData, env) {
     } catch (err) {
       console.error('[GHL] drivers_license_number fallback PUT request threw:', err.message);
     }
+  }
+
+  // Attach the three applicant documents independently. Each call already
+  // catches its own failures internally and resolves to false rather than
+  // throwing (see attachFileUploadCustomField) — the try/catch here is a
+  // second layer so nothing about this step can ever reach the applicant
+  // or block contact/opportunity creation, no matter what goes wrong.
+  try {
+    await attachFileUploadCustomField(env, contactId, CUSTOM_FIELD_IDS.license_front_url, files.license_front);
+  } catch (err) {
+    console.error('[GHL] license_front attach threw:', err.message);
+  }
+  try {
+    await attachFileUploadCustomField(env, contactId, CUSTOM_FIELD_IDS.license_back_url, files.license_back);
+  } catch (err) {
+    console.error('[GHL] license_back attach threw:', err.message);
+  }
+  try {
+    await attachFileUploadCustomField(env, contactId, CUSTOM_FIELD_IDS.platform_screenshot_url, files.platform_screenshot);
+  } catch (err) {
+    console.error('[GHL] platform_screenshot attach threw:', err.message);
   }
 
   const opportunityBody = {
