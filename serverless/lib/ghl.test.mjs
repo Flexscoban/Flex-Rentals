@@ -19,6 +19,16 @@ const BASE_ENV = {
 const DRIVERS_LICENSE_NUMBER_FIELD_ID = 'bqKmhj6NrbgyVei7YEvS';
 const TEST_LICENSE_NUMBER = 'TEST123';
 
+// Same three field IDs hardcoded in serverless/lib/ghl.js CUSTOM_FIELD_IDS
+// — not imported (the module doesn't export them), kept in sync manually
+// like DRIVERS_LICENSE_NUMBER_FIELD_ID above already was.
+const DRIVERS_LICENSE_EXPIRATION_FIELD_ID = 'S9fPj83iMZonybReJRYY';
+const DESIRED_RENTAL_START_DATE_FIELD_ID = 'WGvpVROHnbOl2QsoKNTt';
+const RENTAL_LENGTH_PREFERENCE_FIELD_ID = 'XqsYciy7jWbL5xCfEBQT';
+const TEST_LICENSE_EXPIRATION = '2030-01-01';
+const TEST_RENTAL_START_DATE = '2026-08-01';
+const TEST_RENTAL_LENGTH_PREFERENCE = 'Weekly Rental (Preferred)';
+
 // Same three FILE_UPLOAD field IDs hardcoded in serverless/lib/ghl.js
 // CUSTOM_FIELD_IDS — not imported (the module doesn't export them), kept
 // in sync manually like DRIVERS_LICENSE_NUMBER_FIELD_ID above already was.
@@ -38,8 +48,11 @@ function makeValidFormData(overrides = {}) {
     date_of_birth: '1990-01-01',
     drivers_license_number: TEST_LICENSE_NUMBER,
     drivers_license_state: 'GA',
+    drivers_license_expiration: TEST_LICENSE_EXPIRATION,
     rental_option: 'Deposit Option',
-    application_certification: 'on'
+    application_certification: 'on',
+    desired_rental_start_date: TEST_RENTAL_START_DATE,
+    rental_length_preference: TEST_RENTAL_LENGTH_PREFERENCE
   };
   const fields = Object.assign({}, defaults, overrides);
   Object.keys(fields).forEach((k) => {
@@ -155,6 +168,53 @@ test('drivers_license_number reaches /contacts/upsert customFields with the corr
       field_value: TEST_LICENSE_NUMBER
     });
   });
+});
+
+test('drivers_license_expiration, desired_rental_start_date, and rental_length_preference all reach /contacts/upsert customFields with the correct field IDs and values', async () => {
+  await withMockedGhlFetch({}, async (mock) => {
+    const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true);
+
+    const contactBody = mock.getCapturedContactBody();
+    assert.ok(contactBody, 'contact upsert should have been called');
+
+    const expected = [
+      [DRIVERS_LICENSE_EXPIRATION_FIELD_ID, TEST_LICENSE_EXPIRATION],
+      [DESIRED_RENTAL_START_DATE_FIELD_ID, TEST_RENTAL_START_DATE],
+      [RENTAL_LENGTH_PREFERENCE_FIELD_ID, TEST_RENTAL_LENGTH_PREFERENCE]
+    ];
+    expected.forEach(([fieldId, value]) => {
+      const field = contactBody.customFields.find((f) => f.id === fieldId);
+      assert.ok(field, 'custom field ' + fieldId + ' should be present in the payload');
+      assert.deepEqual(field, { id: fieldId, field_value: value });
+    });
+  });
+});
+
+test('a blank drivers_license_expiration is rejected before reaching GHL (required field)', async () => {
+  const res = await handleApplicationSubmission(makeValidFormData({ drivers_license_expiration: '' }), BASE_ENV);
+  const body = await res.json();
+  assert.equal(res.status, 400);
+  assert.equal(body.ok, false);
+  assert.match(body.error, /drivers_license_expiration/);
+});
+
+test('a blank desired_rental_start_date is rejected before reaching GHL (required field)', async () => {
+  const res = await handleApplicationSubmission(makeValidFormData({ desired_rental_start_date: '' }), BASE_ENV);
+  const body = await res.json();
+  assert.equal(res.status, 400);
+  assert.equal(body.ok, false);
+  assert.match(body.error, /desired_rental_start_date/);
+});
+
+test('a blank rental_length_preference is rejected before reaching GHL (required field)', async () => {
+  const res = await handleApplicationSubmission(makeValidFormData({ rental_length_preference: '' }), BASE_ENV);
+  const body = await res.json();
+  assert.equal(res.status, 400);
+  assert.equal(body.ok, false);
+  assert.match(body.error, /rental_length_preference/);
 });
 
 test('a blank drivers_license_number is rejected before reaching GHL (required field)', async () => {

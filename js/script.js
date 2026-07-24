@@ -218,6 +218,24 @@
     var successEl = document.getElementById('applySuccess');
     var applyCard = form; // the .apply-card element itself
 
+    /* ---- License expiration date: block any date before today --------- */
+    var licenseExpirationInput = document.getElementById('drivers_license_expiration');
+    if (licenseExpirationInput) {
+      function twoDigit(n) { return n < 10 ? '0' + n : String(n); }
+      var today = new Date();
+      licenseExpirationInput.min = today.getFullYear() + '-' +
+        twoDigit(today.getMonth() + 1) + '-' + twoDigit(today.getDate());
+    }
+
+    /* ---- Desired rental start date: block any date before today -------- */
+    var rentalStartDateInput = document.getElementById('desired_rental_start_date');
+    if (rentalStartDateInput) {
+      function rentalStartTwoDigit(n) { return n < 10 ? '0' + n : String(n); }
+      var rentalStartToday = new Date();
+      rentalStartDateInput.min = rentalStartToday.getFullYear() + '-' +
+        rentalStartTwoDigit(rentalStartToday.getMonth() + 1) + '-' + rentalStartTwoDigit(rentalStartToday.getDate());
+    }
+
     /* ---- File upload dropzones: show selected filename, style state --- */
     form.querySelectorAll('.upload-input').forEach(function (input) {
       input.addEventListener('change', function () {
@@ -354,6 +372,9 @@
       var rentalOptionEl = form.querySelector('input[name="rental_option"]:checked');
       var rentalOption = rentalOptionEl ? rentalOptionEl.value : '—';
 
+      var rentalLengthEl = form.querySelector('input[name="rental_length_preference"]:checked');
+      var rentalLength = rentalLengthEl ? rentalLengthEl.value : '—';
+
       var smsConsentEl = document.getElementById('sms_consent');
 
       var rows = [
@@ -364,10 +385,13 @@
         ['Date of Birth', fieldValue('date_of_birth') || '—'],
         ['License Number', fieldValue('drivers_license_number') || '—'],
         ['License State', fieldLabelForSelect('drivers_license_state') || '—'],
+        ['License Expiration', fieldValue('drivers_license_expiration') || '—'],
         ['License — Front', fileName('license_front')],
         ['License — Back', fileName('license_back')],
         ['Platforms', platforms],
         ['Platform Screenshot', fileName('platform_screenshot')],
+        ['Desired Rental Start Date', fieldValue('desired_rental_start_date') || '—'],
+        ['Rental Length Preference', rentalLength],
         ['Rental Option', rentalOption],
         ['Notes', fieldValue('rental_notes') || '—']
       ];

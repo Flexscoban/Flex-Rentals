@@ -1218,6 +1218,11 @@ h1, h2, h3, h4 {
   color: #ff8a8a;
   font-weight: 500;
 }
+.form-field__hint {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
 .form-field.has-error input,
 .form-field.has-error select,
 .form-field.has-error textarea,
@@ -1292,6 +1297,31 @@ h1, h2, h3, h4 {
 }
 .platform-chip input { accent-color: var(--color-accent); width: 16px; height: 16px; }
 .platform-chip:has(input:checked) {
+  border-color: var(--color-accent);
+  background: rgba(52, 199, 89, 0.08);
+}
+
+.rental-length-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+.rental-length-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-dark-900);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+.rental-length-chip input { accent-color: var(--color-accent); width: 16px; height: 16px; }
+.rental-length-chip:has(input:checked) {
   border-color: var(--color-accent);
   background: rgba(52, 199, 89, 0.08);
 }

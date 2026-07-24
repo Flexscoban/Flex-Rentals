@@ -40,13 +40,16 @@ const CUSTOM_FIELD_IDS = {
   sms_consent: '',
   drivers_license_number: 'bqKmhj6NrbgyVei7YEvS',
   drivers_license_state: '',
+  drivers_license_expiration: 'S9fPj83iMZonybReJRYY',
   license_front_url: '3F9ozUT0CvHoXbGbZdtm',
   license_back_url: '9l9dAfs5Ok4bQaylg3HF',
   platforms: 'owq1poGaxvV1pxKn54Ig',
   platform_screenshot_url: 'UQDBEgFi3TfogMuGK14P',
   rental_option: 'w5ykHpRM2xVtyoVF79mj',
   rental_notes: '',
-  application_certification: ''
+  application_certification: '',
+  desired_rental_start_date: 'WGvpVROHnbOl2QsoKNTt',
+  rental_length_preference: 'XqsYciy7jWbL5xCfEBQT'
 };
 
 const REQUIRED_TEXT_FIELDS = [
@@ -57,7 +60,10 @@ const REQUIRED_TEXT_FIELDS = [
   'date_of_birth',
   'drivers_license_number',
   'drivers_license_state',
-  'rental_option'
+  'drivers_license_expiration',
+  'rental_option',
+  'desired_rental_start_date',
+  'rental_length_preference'
 ];
 const REQUIRED_FILES = ['license_front', 'license_back', 'platform_screenshot'];
 
@@ -190,10 +196,13 @@ function readFields(formData) {
     date_of_birth: String(formData.get('date_of_birth') || '').trim(),
     drivers_license_number: String(formData.get('drivers_license_number') || '').trim(),
     drivers_license_state: String(formData.get('drivers_license_state') || '').trim(),
+    drivers_license_expiration: String(formData.get('drivers_license_expiration') || '').trim(),
     platforms: formData.getAll('platforms').map(String).filter(Boolean),
     rental_option: String(formData.get('rental_option') || '').trim(),
     rental_notes: String(formData.get('rental_notes') || '').trim(),
-    application_certification: boolish(formData.get('application_certification'))
+    application_certification: boolish(formData.get('application_certification')),
+    desired_rental_start_date: String(formData.get('desired_rental_start_date') || '').trim(),
+    rental_length_preference: String(formData.get('rental_length_preference') || '').trim()
   };
 }
 
@@ -261,10 +270,13 @@ export async function handleApplicationSubmission(formData, env) {
     sms_consent: fields.sms_consent ? 'Yes' : 'No',
     drivers_license_number: fields.drivers_license_number,
     drivers_license_state: fields.drivers_license_state,
+    drivers_license_expiration: fields.drivers_license_expiration,
     platforms: fields.platforms,
     rental_option: fields.rental_option,
     rental_notes: fields.rental_notes,
-    application_certification: fields.application_certification ? 'Yes' : 'No'
+    application_certification: fields.application_certification ? 'Yes' : 'No',
+    desired_rental_start_date: fields.desired_rental_start_date,
+    rental_length_preference: fields.rental_length_preference
   });
 
   const contactBody = {
