@@ -25,6 +25,7 @@ const TEST_LICENSE_NUMBER = 'TEST123';
 const DRIVERS_LICENSE_EXPIRATION_FIELD_ID = 'S9fPj83iMZonybReJRYY';
 const DESIRED_RENTAL_START_DATE_FIELD_ID = 'WGvpVROHnbOl2QsoKNTt';
 const RENTAL_LENGTH_PREFERENCE_FIELD_ID = 'XqsYciy7jWbL5xCfEBQT';
+const PREFERRED_VEHICLE_FIELD_ID = 'izKtEaTMV7UD5skYkNfv';
 const TEST_LICENSE_EXPIRATION = '2030-01-01';
 const TEST_RENTAL_START_DATE = '2026-08-01';
 const TEST_RENTAL_LENGTH_PREFERENCE = 'Weekly Rental (Preferred)';
@@ -227,17 +228,7 @@ test('a blank preferred_vehicle is rejected before reaching GHL (required field)
   assert.match(body.error, /preferred_vehicle/);
 });
 
-// CUSTOM_FIELD_IDS.preferred_vehicle is intentionally blank until the real
-// GHL custom-field ID is provided (see the comment above it in ghl.js) —
-// buildCustomFields() already skips any field with a blank ID, the same
-// contract every other not-yet-configured field (sms_consent,
-// drivers_license_state, rental_notes, application_certification) relies
-// on. This test locks in that a submitted preferred_vehicle value is
-// currently omitted rather than silently mis-sent, and should be replaced
-// with a "reaches customFields with the correct field ID" assertion (like
-// the one above for drivers_license_expiration etc.) once the real ID is
-// filled in.
-test('preferred_vehicle is validated as required but not yet sent to GHL (field ID not configured)', async () => {
+test('preferred_vehicle reaches /contacts/upsert customFields with the correct field ID and value', async () => {
   await withMockedGhlFetch({}, async (mock) => {
     const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
     const body = await res.json();
@@ -246,11 +237,10 @@ test('preferred_vehicle is validated as required but not yet sent to GHL (field 
 
     const contactBody = mock.getCapturedContactBody();
     assert.ok(contactBody, 'contact upsert should have been called');
-    const values = contactBody.customFields.map((f) => f.field_value);
-    assert.ok(
-      !values.includes(TEST_PREFERRED_VEHICLE),
-      'preferred_vehicle should not appear in customFields until CUSTOM_FIELD_IDS.preferred_vehicle is set'
-    );
+
+    const field = contactBody.customFields.find((f) => f.id === PREFERRED_VEHICLE_FIELD_ID);
+    assert.ok(field, 'preferred_vehicle custom field should be present in the payload');
+    assert.deepEqual(field, { id: PREFERRED_VEHICLE_FIELD_ID, field_value: TEST_PREFERRED_VEHICLE });
   });
 });
 

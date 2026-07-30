@@ -50,12 +50,7 @@ const CUSTOM_FIELD_IDS = {
   application_certification: '',
   desired_rental_start_date: 'WGvpVROHnbOl2QsoKNTt',
   rental_length_preference: 'XqsYciy7jWbL5xCfEBQT',
-  // Preferred Vehicle (Contact > Radio Select, "Flex Rentals Application"
-  // folder) has been created in GHL but its field ID hasn't been provided
-  // yet. Leave blank until then — see GHL-FORM-INTEGRATION.md for how to
-  // find it (Settings > Custom Fields, or GET
-  // /locations/{locationId}/customFields) and paste it here.
-  preferred_vehicle: ''
+  preferred_vehicle: 'izKtEaTMV7UD5skYkNfv'
 };
 
 const REQUIRED_TEXT_FIELDS = [
