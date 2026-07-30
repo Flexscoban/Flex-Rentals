@@ -236,6 +236,57 @@
         rentalStartTwoDigit(rentalStartToday.getMonth() + 1) + '-' + rentalStartTwoDigit(rentalStartToday.getDate());
     }
 
+    /* ---- Preferred Vehicle: URL-param preselection + "Request This        */
+    /* Vehicle" buttons on the fleet cards. Selecting never disables the     */
+    /* field — the applicant can still change it before submitting.         */
+    var PREFERRED_VEHICLE_URL_MAP = {
+      'ford-fusion': 'Ford Fusion',
+      'toyota-prius': 'Toyota Prius',
+      'no-preference': 'No Preference (Best Available)'
+    };
+
+    function selectPreferredVehicle(value) {
+      var radios = form.querySelectorAll('input[name="preferred_vehicle"]');
+      for (var i = 0; i < radios.length; i++) {
+        if (radios[i].value === value) {
+          radios[i].checked = true;
+          return true;
+        }
+      }
+      return false;
+    }
+
+    (function applyPreferredVehicleFromUrl() {
+      var params = new URLSearchParams(window.location.search);
+      var raw = params.get('preferred_vehicle');
+      if (!raw) return;
+      var mapped = PREFERRED_VEHICLE_URL_MAP[raw];
+      if (mapped) selectPreferredVehicle(mapped);
+      // Unrecognized values are ignored safely — no selection is made.
+    })();
+
+    Array.prototype.slice.call(document.querySelectorAll('.fleet-card__request-btn')).forEach(function (btn) {
+      btn.addEventListener('click', function (event) {
+        var linkUrl;
+        try {
+          linkUrl = new URL(btn.getAttribute('href'), window.location.origin);
+        } catch (err) {
+          return; // malformed href — fall back to normal navigation
+        }
+        var raw = linkUrl.searchParams.get('preferred_vehicle');
+        var mapped = raw && PREFERRED_VEHICLE_URL_MAP[raw];
+        if (!mapped) return; // fall back to normal navigation
+
+        event.preventDefault();
+        selectPreferredVehicle(mapped);
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', linkUrl.pathname + linkUrl.search + linkUrl.hash);
+        }
+        var applySection = document.getElementById('apply');
+        if (applySection) applySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
     /* ---- File upload dropzones: show selected filename, style state --- */
     form.querySelectorAll('.upload-input').forEach(function (input) {
       input.addEventListener('change', function () {
@@ -291,6 +342,17 @@
         if (!anyRental) {
           valid = false;
           stepEl.classList.add('has-error');
+        }
+      }
+
+      // Preferred Vehicle radios — one must be selected
+      var preferredVehicleInput = stepEl.querySelector('input[name="preferred_vehicle"]');
+      if (preferredVehicleInput) {
+        var anyPreferredVehicle = stepEl.querySelectorAll('input[name="preferred_vehicle"]:checked').length > 0;
+        if (!anyPreferredVehicle) {
+          valid = false;
+          var preferredVehicleWrapper = preferredVehicleInput.closest('.form-field');
+          if (preferredVehicleWrapper) preferredVehicleWrapper.classList.add('has-error');
         }
       }
 
@@ -375,6 +437,9 @@
       var rentalLengthEl = form.querySelector('input[name="rental_length_preference"]:checked');
       var rentalLength = rentalLengthEl ? rentalLengthEl.value : '—';
 
+      var preferredVehicleEl = form.querySelector('input[name="preferred_vehicle"]:checked');
+      var preferredVehicle = preferredVehicleEl ? preferredVehicleEl.value : '—';
+
       var smsConsentEl = document.getElementById('sms_consent');
 
       var rows = [
@@ -393,6 +458,7 @@
         ['Desired Rental Start Date', fieldValue('desired_rental_start_date') || '—'],
         ['Rental Length Preference', rentalLength],
         ['Rental Option', rentalOption],
+        ['Preferred Vehicle', preferredVehicle],
         ['Notes', fieldValue('rental_notes') || '—']
       ];
 

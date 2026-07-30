@@ -25,9 +25,11 @@ const TEST_LICENSE_NUMBER = 'TEST123';
 const DRIVERS_LICENSE_EXPIRATION_FIELD_ID = 'S9fPj83iMZonybReJRYY';
 const DESIRED_RENTAL_START_DATE_FIELD_ID = 'WGvpVROHnbOl2QsoKNTt';
 const RENTAL_LENGTH_PREFERENCE_FIELD_ID = 'XqsYciy7jWbL5xCfEBQT';
+const PREFERRED_VEHICLE_FIELD_ID = 'izKtEaTMV7UD5skYkNfv';
 const TEST_LICENSE_EXPIRATION = '2030-01-01';
 const TEST_RENTAL_START_DATE = '2026-08-01';
 const TEST_RENTAL_LENGTH_PREFERENCE = 'Weekly Rental (Preferred)';
+const TEST_PREFERRED_VEHICLE = 'Ford Fusion';
 
 // Same three FILE_UPLOAD field IDs hardcoded in serverless/lib/ghl.js
 // CUSTOM_FIELD_IDS — not imported (the module doesn't export them), kept
@@ -52,7 +54,8 @@ function makeValidFormData(overrides = {}) {
     rental_option: 'Deposit Option',
     application_certification: 'on',
     desired_rental_start_date: TEST_RENTAL_START_DATE,
-    rental_length_preference: TEST_RENTAL_LENGTH_PREFERENCE
+    rental_length_preference: TEST_RENTAL_LENGTH_PREFERENCE,
+    preferred_vehicle: TEST_PREFERRED_VEHICLE
   };
   const fields = Object.assign({}, defaults, overrides);
   Object.keys(fields).forEach((k) => {
@@ -215,6 +218,30 @@ test('a blank rental_length_preference is rejected before reaching GHL (required
   assert.equal(res.status, 400);
   assert.equal(body.ok, false);
   assert.match(body.error, /rental_length_preference/);
+});
+
+test('a blank preferred_vehicle is rejected before reaching GHL (required field)', async () => {
+  const res = await handleApplicationSubmission(makeValidFormData({ preferred_vehicle: '' }), BASE_ENV);
+  const body = await res.json();
+  assert.equal(res.status, 400);
+  assert.equal(body.ok, false);
+  assert.match(body.error, /preferred_vehicle/);
+});
+
+test('preferred_vehicle reaches /contacts/upsert customFields with the correct field ID and value', async () => {
+  await withMockedGhlFetch({}, async (mock) => {
+    const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true);
+
+    const contactBody = mock.getCapturedContactBody();
+    assert.ok(contactBody, 'contact upsert should have been called');
+
+    const field = contactBody.customFields.find((f) => f.id === PREFERRED_VEHICLE_FIELD_ID);
+    assert.ok(field, 'preferred_vehicle custom field should be present in the payload');
+    assert.deepEqual(field, { id: PREFERRED_VEHICLE_FIELD_ID, field_value: TEST_PREFERRED_VEHICLE });
+  });
 });
 
 test('a blank drivers_license_number is rejected before reaching GHL (required field)', async () => {
