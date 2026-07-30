@@ -367,6 +367,8 @@
               <h3>Ford Fusion <span>or similar</span></h3>
               <p>Great on gas, smooth ride — perfect for rideshare and daily driving.</p>
               <p class="fleet-card__price">From $350/week</p>
+              <a href="/?preferred_vehicle=ford-fusion#apply" class="btn btn--primary btn--block fleet-card__request-btn">Request This Vehicle</a>
+              <p class="fleet-card__disclaimer">Vehicle requests are subject to availability and final confirmation.</p>
             </div>
           </article>
 
@@ -378,6 +380,8 @@
               <h3>Toyota Prius <span>or similar</span></h3>
               <p>Fuel efficient and dependable — ideal for maximizing earnings per mile.</p>
               <p class="fleet-card__price">From $350/week</p>
+              <a href="/?preferred_vehicle=toyota-prius#apply" class="btn btn--primary btn--block fleet-card__request-btn">Request This Vehicle</a>
+              <p class="fleet-card__disclaimer">Vehicle requests are subject to availability and final confirmation.</p>
             </div>
           </article>
         </div>
@@ -865,6 +869,17 @@
             </div>
             <span class="form-field__error form-field__error--group">Choose a rental option to continue.</span>
             <p class="rental-options__note">Choosing an option does not lock you in — the Flex Rentals team will review the best available rental option with you before pickup.</p>
+
+            <div class="form-field">
+              <span class="form-field__group-label">Preferred Vehicle</span>
+              <div class="rental-length-grid">
+                <label class="rental-length-chip"><input type="radio" name="preferred_vehicle" value="Ford Fusion" required /><span>Ford Fusion</span></label>
+                <label class="rental-length-chip"><input type="radio" name="preferred_vehicle" value="Toyota Prius" required /><span>Toyota Prius</span></label>
+                <label class="rental-length-chip"><input type="radio" name="preferred_vehicle" value="No Preference (Best Available)" required /><span>No Preference (Best Available)</span></label>
+              </div>
+              <span class="form-field__hint">Select the vehicle you prefer. Vehicle requests are subject to availability, maintenance status, rental length, and final confirmation.</span>
+              <span class="form-field__error form-field__error--group">Choose a preferred vehicle to continue.</span>
+            </div>
 
             <div class="form-field">
               <label for="desired_rental_start_date">Desired Rental Start Date</label>

@@ -800,6 +800,14 @@ h1, h2, h3, h4 {
   color: var(--color-muted);
 }
 .fleet-card__body p { color: var(--color-muted); font-size: 0.92rem; margin-bottom: var(--space-4); }
+.fleet-card__request-btn { margin-top: var(--space-2); }
+.fleet-card__body .fleet-card__disclaimer {
+  margin-top: var(--space-3);
+  margin-bottom: 0;
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  text-align: center;
+}
 .fleet-card__price {
   display: inline-block;
   background: rgba(52, 199, 89, 0.12);

@@ -49,7 +49,13 @@ const CUSTOM_FIELD_IDS = {
   rental_notes: '',
   application_certification: '',
   desired_rental_start_date: 'WGvpVROHnbOl2QsoKNTt',
-  rental_length_preference: 'XqsYciy7jWbL5xCfEBQT'
+  rental_length_preference: 'XqsYciy7jWbL5xCfEBQT',
+  // Preferred Vehicle (Contact > Radio Select, "Flex Rentals Application"
+  // folder) has been created in GHL but its field ID hasn't been provided
+  // yet. Leave blank until then — see GHL-FORM-INTEGRATION.md for how to
+  // find it (Settings > Custom Fields, or GET
+  // /locations/{locationId}/customFields) and paste it here.
+  preferred_vehicle: ''
 };
 
 const REQUIRED_TEXT_FIELDS = [
@@ -63,7 +69,8 @@ const REQUIRED_TEXT_FIELDS = [
   'drivers_license_expiration',
   'rental_option',
   'desired_rental_start_date',
-  'rental_length_preference'
+  'rental_length_preference',
+  'preferred_vehicle'
 ];
 const REQUIRED_FILES = ['license_front', 'license_back', 'platform_screenshot'];
 
@@ -202,7 +209,8 @@ function readFields(formData) {
     rental_notes: String(formData.get('rental_notes') || '').trim(),
     application_certification: boolish(formData.get('application_certification')),
     desired_rental_start_date: String(formData.get('desired_rental_start_date') || '').trim(),
-    rental_length_preference: String(formData.get('rental_length_preference') || '').trim()
+    rental_length_preference: String(formData.get('rental_length_preference') || '').trim(),
+    preferred_vehicle: String(formData.get('preferred_vehicle') || '').trim()
   };
 }
 
@@ -262,6 +270,13 @@ export async function handleApplicationSubmission(formData, env) {
     return errorResponse(400, 'Missing or invalid fields: ' + missing.join(', '));
   }
 
+  // Diagnostic only — never logs the submitted value, just flags that a
+  // field the applicant filled in has no destination custom field ID
+  // configured yet, so it's silently dropped from the GHL payload below.
+  if (fields.preferred_vehicle && !CUSTOM_FIELD_IDS.preferred_vehicle) {
+    console.error('[GHL] preferred_vehicle submitted but CUSTOM_FIELD_IDS.preferred_vehicle is not configured — value was not sent to GHL');
+  }
+
   // license_front_url / license_back_url / platform_screenshot_url are
   // FILE_UPLOAD fields and need a contact id to attach to, so they're
   // handled separately by attachFileUploadCustomField() below, after the
@@ -276,7 +291,8 @@ export async function handleApplicationSubmission(formData, env) {
     rental_notes: fields.rental_notes,
     application_certification: fields.application_certification ? 'Yes' : 'No',
     desired_rental_start_date: fields.desired_rental_start_date,
-    rental_length_preference: fields.rental_length_preference
+    rental_length_preference: fields.rental_length_preference,
+    preferred_vehicle: fields.preferred_vehicle
   });
 
   const contactBody = {

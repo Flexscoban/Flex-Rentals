@@ -28,6 +28,7 @@ const RENTAL_LENGTH_PREFERENCE_FIELD_ID = 'XqsYciy7jWbL5xCfEBQT';
 const TEST_LICENSE_EXPIRATION = '2030-01-01';
 const TEST_RENTAL_START_DATE = '2026-08-01';
 const TEST_RENTAL_LENGTH_PREFERENCE = 'Weekly Rental (Preferred)';
+const TEST_PREFERRED_VEHICLE = 'Ford Fusion';
 
 // Same three FILE_UPLOAD field IDs hardcoded in serverless/lib/ghl.js
 // CUSTOM_FIELD_IDS — not imported (the module doesn't export them), kept
@@ -52,7 +53,8 @@ function makeValidFormData(overrides = {}) {
     rental_option: 'Deposit Option',
     application_certification: 'on',
     desired_rental_start_date: TEST_RENTAL_START_DATE,
-    rental_length_preference: TEST_RENTAL_LENGTH_PREFERENCE
+    rental_length_preference: TEST_RENTAL_LENGTH_PREFERENCE,
+    preferred_vehicle: TEST_PREFERRED_VEHICLE
   };
   const fields = Object.assign({}, defaults, overrides);
   Object.keys(fields).forEach((k) => {
@@ -215,6 +217,41 @@ test('a blank rental_length_preference is rejected before reaching GHL (required
   assert.equal(res.status, 400);
   assert.equal(body.ok, false);
   assert.match(body.error, /rental_length_preference/);
+});
+
+test('a blank preferred_vehicle is rejected before reaching GHL (required field)', async () => {
+  const res = await handleApplicationSubmission(makeValidFormData({ preferred_vehicle: '' }), BASE_ENV);
+  const body = await res.json();
+  assert.equal(res.status, 400);
+  assert.equal(body.ok, false);
+  assert.match(body.error, /preferred_vehicle/);
+});
+
+// CUSTOM_FIELD_IDS.preferred_vehicle is intentionally blank until the real
+// GHL custom-field ID is provided (see the comment above it in ghl.js) —
+// buildCustomFields() already skips any field with a blank ID, the same
+// contract every other not-yet-configured field (sms_consent,
+// drivers_license_state, rental_notes, application_certification) relies
+// on. This test locks in that a submitted preferred_vehicle value is
+// currently omitted rather than silently mis-sent, and should be replaced
+// with a "reaches customFields with the correct field ID" assertion (like
+// the one above for drivers_license_expiration etc.) once the real ID is
+// filled in.
+test('preferred_vehicle is validated as required but not yet sent to GHL (field ID not configured)', async () => {
+  await withMockedGhlFetch({}, async (mock) => {
+    const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true);
+
+    const contactBody = mock.getCapturedContactBody();
+    assert.ok(contactBody, 'contact upsert should have been called');
+    const values = contactBody.customFields.map((f) => f.field_value);
+    assert.ok(
+      !values.includes(TEST_PREFERRED_VEHICLE),
+      'preferred_vehicle should not appear in customFields until CUSTOM_FIELD_IDS.preferred_vehicle is set'
+    );
+  });
 });
 
 test('a blank drivers_license_number is rejected before reaching GHL (required field)', async () => {
