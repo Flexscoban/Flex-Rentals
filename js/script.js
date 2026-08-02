@@ -441,12 +441,14 @@
       var preferredVehicle = preferredVehicleEl ? preferredVehicleEl.value : '—';
 
       var smsConsentEl = document.getElementById('sms_consent');
+      var smsMarketingEl = document.getElementById('sms_consent_marketing');
 
       var rows = [
         ['Name', (fieldValue('first_name') + ' ' + fieldValue('last_name')).trim() || '—'],
         ['Phone', fieldValue('phone') || '—'],
         ['Email', fieldValue('email') || '—'],
-        ['SMS Updates', smsConsentEl && smsConsentEl.checked ? 'Opted in' : 'Not opted in'],
+        ['Non-Marketing SMS', smsConsentEl && smsConsentEl.checked ? 'Opted In' : 'Not Opted In'],
+        ['Marketing SMS', smsMarketingEl && smsMarketingEl.checked ? 'Opted In' : 'Not Opted In'],
         ['Date of Birth', fieldValue('date_of_birth') || '—'],
         ['License Number', fieldValue('drivers_license_number') || '—'],
         ['License State', fieldLabelForSelect('drivers_license_state') || '—'],

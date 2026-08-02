@@ -37,7 +37,8 @@ const GHL_API_VERSION = '2021-07-28';
    GHL dashboard, before being wired in here.
    -------------------------------------------------------------------------- */
 const CUSTOM_FIELD_IDS = {
-  sms_consent: '',
+  sms_consent: 'Ecy7B643TKgKQYObrv3Y',
+  sms_consent_marketing: 'hQHvcV407Q3qTAkaGfTZ',
   drivers_license_number: 'bqKmhj6NrbgyVei7YEvS',
   drivers_license_state: '',
   drivers_license_expiration: 'S9fPj83iMZonybReJRYY',
@@ -195,6 +196,7 @@ function readFields(formData) {
     phone: String(formData.get('phone') || '').trim(),
     email: String(formData.get('email') || '').trim(),
     sms_consent: boolish(formData.get('sms_consent')),
+    sms_consent_marketing: boolish(formData.get('sms_consent_marketing')),
     date_of_birth: String(formData.get('date_of_birth') || '').trim(),
     drivers_license_number: String(formData.get('drivers_license_number') || '').trim(),
     drivers_license_state: String(formData.get('drivers_license_state') || '').trim(),
@@ -278,6 +280,7 @@ export async function handleApplicationSubmission(formData, env) {
   // contact exists — not included in this initial upsert payload.
   const customFields = buildCustomFields({
     sms_consent: fields.sms_consent ? 'Yes' : 'No',
+    sms_consent_marketing: fields.sms_consent_marketing ? 'Yes' : 'No',
     drivers_license_number: fields.drivers_license_number,
     drivers_license_state: fields.drivers_license_state,
     drivers_license_expiration: fields.drivers_license_expiration,
