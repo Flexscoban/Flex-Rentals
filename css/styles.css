@@ -1413,6 +1413,11 @@ h1, h2, h3, h4 {
 }
 .apply-consent input { margin-top: 3px; accent-color: var(--color-accent); width: 16px; height: 16px; flex-shrink: 0; }
 .apply-consent a { color: var(--color-accent); text-decoration: underline; }
+.apply-consent-links {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+.apply-consent-links a { color: var(--color-accent); text-decoration: underline; }
 
 /* Step navigation */
 .apply-nav {

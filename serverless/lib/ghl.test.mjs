@@ -26,6 +26,8 @@ const DRIVERS_LICENSE_EXPIRATION_FIELD_ID = 'S9fPj83iMZonybReJRYY';
 const DESIRED_RENTAL_START_DATE_FIELD_ID = 'WGvpVROHnbOl2QsoKNTt';
 const RENTAL_LENGTH_PREFERENCE_FIELD_ID = 'XqsYciy7jWbL5xCfEBQT';
 const PREFERRED_VEHICLE_FIELD_ID = 'izKtEaTMV7UD5skYkNfv';
+const NONMARKETING_SMS_CONSENT_FIELD_ID = 'Ecy7B643TKgKQYObrv3Y';
+const MARKETING_SMS_CONSENT_FIELD_ID = 'hQHvcV407Q3qTAkaGfTZ';
 const TEST_LICENSE_EXPIRATION = '2030-01-01';
 const TEST_RENTAL_START_DATE = '2026-08-01';
 const TEST_RENTAL_LENGTH_PREFERENCE = 'Weekly Rental (Preferred)';
@@ -226,6 +228,59 @@ test('a blank preferred_vehicle is rejected before reaching GHL (required field)
   assert.equal(res.status, 400);
   assert.equal(body.ok, false);
   assert.match(body.error, /preferred_vehicle/);
+});
+
+test('both SMS consents default to "No" in /contacts/upsert customFields when the checkboxes are absent', async () => {
+  await withMockedGhlFetch({}, async (mock) => {
+    // makeValidFormData omits both checkbox fields — exactly what the
+    // browser sends when neither box is checked.
+    const res = await handleApplicationSubmission(makeValidFormData(), BASE_ENV);
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true);
+
+    const contactBody = mock.getCapturedContactBody();
+    const nonMkt = contactBody.customFields.find((f) => f.id === NONMARKETING_SMS_CONSENT_FIELD_ID);
+    const mkt = contactBody.customFields.find((f) => f.id === MARKETING_SMS_CONSENT_FIELD_ID);
+    assert.deepEqual(nonMkt, { id: NONMARKETING_SMS_CONSENT_FIELD_ID, field_value: 'No' });
+    assert.deepEqual(mkt, { id: MARKETING_SMS_CONSENT_FIELD_ID, field_value: 'No' });
+  });
+});
+
+test('each SMS consent maps independently to "Yes" with its own field ID when its checkbox is checked', async () => {
+  await withMockedGhlFetch({}, async (mock) => {
+    const res = await handleApplicationSubmission(
+      makeValidFormData({ sms_consent: 'on', sms_consent_marketing: 'on' }),
+      BASE_ENV
+    );
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true);
+
+    const contactBody = mock.getCapturedContactBody();
+    const nonMkt = contactBody.customFields.find((f) => f.id === NONMARKETING_SMS_CONSENT_FIELD_ID);
+    const mkt = contactBody.customFields.find((f) => f.id === MARKETING_SMS_CONSENT_FIELD_ID);
+    assert.deepEqual(nonMkt, { id: NONMARKETING_SMS_CONSENT_FIELD_ID, field_value: 'Yes' });
+    assert.deepEqual(mkt, { id: MARKETING_SMS_CONSENT_FIELD_ID, field_value: 'Yes' });
+  });
+});
+
+test('mixed SMS consent (marketing only) sends non-marketing "No" and marketing "Yes"', async () => {
+  await withMockedGhlFetch({}, async (mock) => {
+    const res = await handleApplicationSubmission(
+      makeValidFormData({ sms_consent_marketing: 'on' }),
+      BASE_ENV
+    );
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true);
+
+    const contactBody = mock.getCapturedContactBody();
+    const nonMkt = contactBody.customFields.find((f) => f.id === NONMARKETING_SMS_CONSENT_FIELD_ID);
+    const mkt = contactBody.customFields.find((f) => f.id === MARKETING_SMS_CONSENT_FIELD_ID);
+    assert.deepEqual(nonMkt, { id: NONMARKETING_SMS_CONSENT_FIELD_ID, field_value: 'No' });
+    assert.deepEqual(mkt, { id: MARKETING_SMS_CONSENT_FIELD_ID, field_value: 'Yes' });
+  });
 });
 
 test('preferred_vehicle reaches /contacts/upsert customFields with the correct field ID and value', async () => {
