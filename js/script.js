@@ -205,6 +205,23 @@
     var currentStep = 1;
     var isSubmitting = false;
 
+    /* Google Ads "Submit lead form" conversion. Fires at most once per page
+       load, and only from the submit success handler below. The
+       transaction_id lets Google Ads drop any duplicate of the same
+       submission as well. */
+    var conversionSent = false;
+    function trackApplicationConversion() {
+      if (conversionSent) return;
+      conversionSent = true;
+      if (typeof gtag !== 'function') return;
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18483946625/P6CoCMnWsosdEIHJ6u1E',
+        'value': 1.0,
+        'currency': 'USD',
+        'transaction_id': 'app-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)
+      });
+    }
+
     var steps = Array.prototype.slice.call(form.querySelectorAll('.apply-step'));
     var progressItems = Array.prototype.slice.call(document.querySelectorAll('.apply-progress__item'));
     var progressFill = document.getElementById('applyProgressFill');
@@ -493,19 +510,13 @@
         statusEl.textContent = 'Submitting your application…';
       }
 
-     submitApplicationToGHL(formData)
-  .then(function () {
+      submitApplicationToGHL(formData)
+        .then(function () {
+          // Only reached after /api/submit-application returned ok: true,
+          // i.e. GHL accepted the application.
+          trackApplicationConversion();
 
-    // Google Ads conversion — successful application submission
-    if (typeof gtag === 'function') {
-      gtag('event', 'conversion', {
-        'send_to': 'AW-18483946625/P6CoCMnWsosdEIHJ6u1E',
-        'value': 1.0,
-        'currency': 'USD'
-      });
-    }
-
-    form.hidden = true;
+          form.hidden = true;
           if (progressRoot) progressRoot.hidden = true;
           if (introEl) introEl.hidden = true;
           if (statusEl) statusEl.textContent = '';
