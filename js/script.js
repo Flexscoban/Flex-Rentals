@@ -493,9 +493,19 @@
         statusEl.textContent = 'Submitting your application…';
       }
 
-      submitApplicationToGHL(formData)
-        .then(function () {
-          form.hidden = true;
+     submitApplicationToGHL(formData)
+  .then(function () {
+
+    // Google Ads conversion — successful application submission
+    if (typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18483946625/P6CoCMnWsosdEIHJ6u1E',
+        'value': 1.0,
+        'currency': 'USD'
+      });
+    }
+
+    form.hidden = true;
           if (progressRoot) progressRoot.hidden = true;
           if (introEl) introEl.hidden = true;
           if (statusEl) statusEl.textContent = '';
